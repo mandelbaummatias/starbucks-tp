@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 
 # --- 0. Password Prompt (Shared across all steps) ---
 if (-not $env:PGPASSWORD) {
-    Write-Host "🔐 Database Credentials Required" -ForegroundColor Yellow
+    Write-Host "[PASSWORD] Database Credentials Required" -ForegroundColor Yellow
     $password = Read-Host -AsSecureString -Prompt "Enter PostgreSQL password for user 'postgres'"
     if (-not $password) {
         Write-Error "Password is required to proceed."
@@ -25,16 +25,17 @@ if (-not $env:PGPASSWORD) {
     $env:PGPASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)
     [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
 }
+
 function Write-Step ([string]$msg) {
-    Write-Host "`n🚀 STEP: $msg" -ForegroundColor Cyan -BackgroundColor DarkBlue
+    Write-Host "`n[STEP] $msg" -ForegroundColor Cyan -BackgroundColor DarkBlue
 }
 
 function Write-Success ([string]$msg) {
-    Write-Host "✅ $msg" -ForegroundColor Green
+    Write-Host "[SUCCESS] $msg" -ForegroundColor Green
 }
 
 function Write-Failure ([string]$msg) {
-    Write-Host "❌ $msg" -ForegroundColor Red
+    Write-Host "[FAILURE] $msg" -ForegroundColor Red
     exit 1
 }
 
@@ -76,7 +77,7 @@ try {
     Write-Failure "Failed to inject measures. Ensure Python is installed and 'inject_measures.py' is in the root."
 }
 
-Write-Host "`n✨ Pipeline execution complete! ✨" -ForegroundColor Yellow
+Write-Host "`n[COMPLETED] Pipeline execution complete!" -ForegroundColor Yellow
 Write-Host "Action items for you:" -ForegroundColor White
 Write-Host "1. Open 'Starbucks_PowerBI.pbip' in Power BI Desktop." -ForegroundColor White
 Write-Host "2. Click 'Refresh' to sync your local Postgres data." -ForegroundColor White
