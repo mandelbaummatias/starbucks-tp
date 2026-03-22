@@ -1,0 +1,12 @@
+expression vw_orders_starbucks =
+		let
+		    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+		    starbucks_vw_orders_starbucks = Origen{[Schema="starbucks",Item="vw_orders_starbucks"]}[Data]
+		in
+		    starbucks_vw_orders_starbucks
+	lineageTag: efc43bd2-001e-4276-b1db-1cbc8607c669
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,51 @@
+table DimCustomer
+	lineageTag: 211c69bb-5020-49b1-a640-a8b81db14571
+
+	column customer_id
+		dataType: string
+		lineageTag: 49b5d428-abe2-4aa1-8e40-50cc4b51207b
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_age_group
+		dataType: string
+		lineageTag: c7169c08-47f5-4394-adb0-a28ce4d2a392
+		summarizeBy: none
+		sourceColumn: customer_age_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_gender
+		dataType: string
+		lineageTag: 3941da49-786e-4979-a2f5-7752a3e9bd19
+		summarizeBy: none
+		sourceColumn: customer_gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_rewards_member
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 38b2af9c-d892-4f86-bc04-9e3375cd5663
+		summarizeBy: none
+		sourceColumn: is_rewards_member
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCustomer = m
+		mode: import
+		source =
+				let
+				    Origen = vw_orders_starbucks,
+				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_ahead", "customer_satisfaction", "order_datetime", "day_of_month", "month_num", "quarter_num", "year_num", "hour_of_day", "time_period", "store_location_type", "region", "order_id", "order_date", "order_time", "day_of_week", "order_channel", "store_id"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas"),
+				    #"Duplicados quitados1" = Table.Distinct(#"Duplicados quitados", {"customer_id"})
+				in
+				    #"Duplicados quitados1"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

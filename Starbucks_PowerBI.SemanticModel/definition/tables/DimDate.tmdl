@@ -1,0 +1,82 @@
+table DimDate
+	lineageTag: 85e3cde8-117a-4e36-8116-3cdf90d1f3e7
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 881318cc-3143-4355-b43e-ab7dd58b3723
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variación
+			isDefault
+			relationship: c17bcb86-ea06-43ca-8f44-9e4ec49e7782
+			defaultHierarchy: LocalDateTable_d2151c68-6770-42e3-a2ae-86b6bfde072b.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column day_of_week
+		dataType: string
+		lineageTag: bc413359-c616-420f-88a8-43850fcb1459
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: double
+		lineageTag: 26d6367d-ed5c-4087-ad0d-2ee257df3bdf
+		summarizeBy: sum
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column month_num
+		dataType: double
+		lineageTag: b97856db-85b7-452e-8ee1-bf239fcca3db
+		summarizeBy: sum
+		sourceColumn: month_num
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column quarter_num
+		dataType: double
+		lineageTag: bcb8738f-f6a8-4a37-82da-c272917a29a6
+		summarizeBy: sum
+		sourceColumn: quarter_num
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column year_num
+		dataType: double
+		lineageTag: b6faf5cd-1e13-4caf-80b2-93797d628990
+		summarizeBy: sum
+		sourceColumn: year_num
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DimDate = m
+		mode: import
+		source =
+				let
+				    Origen = vw_orders_starbucks,
+				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"customer_id", "order_id", "order_time", "order_channel", "store_id", "store_location_type", "region", "customer_age_group", "customer_gender", "is_rewards_member", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_ahead", "customer_satisfaction", "order_datetime", "hour_of_day", "time_period"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas"),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Duplicados quitados",{{"order_date", "date"}})
+				in
+				    #"Columnas con nombre cambiado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

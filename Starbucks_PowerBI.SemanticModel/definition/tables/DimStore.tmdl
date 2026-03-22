@@ -1,0 +1,41 @@
+table DimStore
+	lineageTag: 3e8b24ad-5063-4328-97c9-7a88f5d1164a
+
+	column store_id
+		dataType: string
+		lineageTag: cbbdcaec-5bbf-4fad-8b4c-01122c396ffc
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_location_type
+		dataType: string
+		lineageTag: e4fcc204-bba4-4b4b-aa0c-bdf394cd4da7
+		summarizeBy: none
+		sourceColumn: store_location_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: e451eec3-7c27-4ce5-a809-dca7918c944d
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimStore = m
+		mode: import
+		source =
+				let
+				    Origen = vw_orders_starbucks,
+				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"customer_id", "order_id", "order_date", "order_time", "day_of_week", "order_channel", "customer_age_group", "customer_gender", "is_rewards_member", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_ahead", "customer_satisfaction", "order_datetime", "day_of_month", "month_num", "quarter_num", "year_num", "hour_of_day", "time_period"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas")
+				in
+				    #"Duplicados quitados"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

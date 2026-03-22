@@ -1,0 +1,100 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 1.6666666666666667,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 396.33333333333337,
+            "y": 75.666666666666657
+          },
+          "nodeIndex": "DimChannel",
+          "nodeLineageTag": "63230b13-ca29-416c-8ac2-2b1035e926c1",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1288.6666666666665,
+            "y": 43.666666666666657
+          },
+          "nodeIndex": "DimCustomer",
+          "nodeLineageTag": "211c69bb-5020-49b1-a640-a8b81db14571",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1291,
+            "y": 518
+          },
+          "nodeIndex": "DimDate",
+          "nodeLineageTag": "85e3cde8-117a-4e36-8116-3cdf90d1f3e7",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 395.66666666666663,
+            "y": 535.66666666666663
+          },
+          "nodeIndex": "DimStore",
+          "nodeLineageTag": "3e8b24ad-5063-4328-97c9-7a88f5d1164a",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 825,
+            "y": 0
+          },
+          "nodeIndex": "DimTime",
+          "nodeLineageTag": "ff293971-60e9-4f87-8623-a12c31f48366",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 836.66666666666663,
+            "y": 283.33333333333337
+          },
+          "nodeIndex": "FactOrders",
+          "nodeLineageTag": "2c4b3069-ab90-4e5c-877a-c152f1d690d8",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas las tablas",
+      "zoomValue": 60,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas las tablas",
+  "defaultDiagram": "Todas las tablas"
+}

@@ -1,0 +1,136 @@
+table FactOrders
+	lineageTag: 2c4b3069-ab90-4e5c-877a-c152f1d690d8
+
+	column customer_id
+		dataType: string
+		lineageTag: b9e5b52c-af91-4c2a-a6f2-eccdff538339
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: c4d0130c-3240-4851-952f-8be8af46d428
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 97572e08-b40e-4326-a864-b72ea999f7a8
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column order_time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 6cf5ff9f-1293-49be-8738-5d7cf1c73f28
+		summarizeBy: none
+		sourceColumn: order_time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column store_id
+		dataType: string
+		lineageTag: 73872071-4bdc-48e3-92f1-51f1f41690e3
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column cart_size
+		dataType: int64
+		formatString: 0
+		lineageTag: 11015715-5eda-413b-b894-9ea5ed6896e4
+		summarizeBy: sum
+		sourceColumn: cart_size
+
+		annotation SummarizationSetBy = Automatic
+
+	column num_customizations
+		dataType: int64
+		formatString: 0
+		lineageTag: 95c9b2f7-f51c-47d0-bc7b-6ca71f5e60c4
+		summarizeBy: sum
+		sourceColumn: num_customizations
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_spend
+		dataType: double
+		lineageTag: 9cec3ea6-0797-460c-98c9-c79265bdd8c7
+		summarizeBy: sum
+		sourceColumn: total_spend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fulfillment_time_min
+		dataType: double
+		lineageTag: bb806071-055c-4f83-ace6-070d851b92cb
+		summarizeBy: sum
+		sourceColumn: fulfillment_time_min
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column drink_category
+		dataType: string
+		lineageTag: cdbaf415-fbe9-48ea-9b38-b6ca7fcd2c2c
+		summarizeBy: none
+		sourceColumn: drink_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_food_item
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ae575443-18d4-4a27-960f-ee1c19c6d5d8
+		summarizeBy: none
+		sourceColumn: has_food_item
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_satisfaction
+		dataType: int64
+		formatString: 0
+		lineageTag: d05a2f2d-be8b-4b03-8575-41e11c1440a6
+		summarizeBy: sum
+		sourceColumn: customer_satisfaction
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_key
+		dataType: string
+		lineageTag: 427c65da-12f7-4a66-a86b-3e9bfeaeda35
+		summarizeBy: none
+		sourceColumn: channel_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactOrders = m
+		mode: import
+		source =
+				let
+				    Origen = vw_orders_starbucks,
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"order_ahead", type text}}),
+				    #"Personalizada agregada" = Table.AddColumn(#"Tipo cambiado", "channel_key", each [order_channel] & "|" & [order_ahead]),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Personalizada agregada",{"day_of_week", "order_channel", "store_location_type", "region", "customer_age_group", "customer_gender", "is_rewards_member", "order_ahead", "order_datetime", "day_of_month", "month_num", "quarter_num", "year_num", "hour_of_day", "time_period"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

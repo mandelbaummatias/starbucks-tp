@@ -1,0 +1,25 @@
+relationship c17bcb86-ea06-43ca-8f44-9e4ec49e7782
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimDate.date
+	toColumn: LocalDateTable_d2151c68-6770-42e3-a2ae-86b6bfde072b.Date
+
+relationship AutoDetected_dba332ad-5469-4fcf-b07a-0df47d2de0ab
+	fromColumn: FactOrders.store_id
+	toColumn: DimStore.store_id
+
+relationship 725d8281-22d7-a591-ba6a-5fbd4f870af3
+	fromColumn: FactOrders.customer_id
+	toColumn: DimCustomer.customer_id
+
+relationship c1604907-2c06-5adb-bf66-75db1a46306e
+	fromColumn: FactOrders.order_date
+	toColumn: DimDate.date
+
+relationship a52d7dd9-4211-8f67-e3cb-593e724e4f26
+	fromColumn: FactOrders.order_time
+	toColumn: DimTime.time
+
+relationship 04fc438b-d712-d0ed-7978-fa12a83a1016
+	fromColumn: FactOrders.channel_key
+	toColumn: DimChannel.channel_key
+

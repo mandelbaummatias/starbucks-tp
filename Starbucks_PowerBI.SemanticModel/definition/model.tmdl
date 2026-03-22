@@ -1,0 +1,25 @@
+model Model
+	culture: es-ES
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-AR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["vw_orders_starbucks","DimCustomer","DimStore","DimDate","DimTime","DimChannel","FactOrders"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimCustomer
+ref table DimStore
+ref table DimDate
+ref table DateTableTemplate_e0ef5ba3-9047-4e48-8fcf-8f1472a9ef77
+ref table LocalDateTable_d2151c68-6770-42e3-a2ae-86b6bfde072b
+ref table DimTime
+ref table DimChannel
+ref table FactOrders
+
+ref cultureInfo es-ES
+

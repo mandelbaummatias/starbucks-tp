@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Starbucks_PowerBI"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bf64b3d9-24c7-4ce7-9bbe-c2a9800d2c6b"
+  }
+}
