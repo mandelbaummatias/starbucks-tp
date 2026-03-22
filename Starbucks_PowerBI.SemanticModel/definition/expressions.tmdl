@@ -1,9 +1,21 @@
 expression vw_orders_starbucks =
 		let
 		    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
-		    starbucks_vw_orders_starbucks = Origen{[Schema="starbucks",Item="vw_orders_starbucks"]}[Data]
+		    Source = Origen{[Schema="starbucks",Item="raw_orders"]}[Data],
+		    #"Fecha y Hora Agregada" = Table.AddColumn(Source, "order_datetime", each [order_date] & [order_time], type datetime),
+		    #"Día Agregado" = Table.AddColumn(#"Fecha y Hora Agregada", "day_of_month", each Date.Day([order_date]), Int64.Type),
+		    #"Mes Agregado" = Table.AddColumn(#"Día Agregado", "month_num", each Date.Month([order_date]), Int64.Type),
+		    #"Trimestre Agregado" = Table.AddColumn(#"Mes Agregado", "quarter_num", each Date.QuarterOfYear([order_date]), Int64.Type),
+		    #"Año Agregado" = Table.AddColumn(#"Trimestre Agregado", "year_num", each Date.Year([order_date]), Int64.Type),
+		    #"Hora Agregada" = Table.AddColumn(#"Año Agregado", "hour_of_day", each Time.Hour([order_time]), Int64.Type),
+		    #"Periodo Agregado" = Table.AddColumn(#"Hora Agregada", "time_period", each 
+		        if [hour_of_day] >= 7 and [hour_of_day] <= 9 then "Morning Rush"
+		        else if [hour_of_day] >= 10 and [hour_of_day] <= 13 then "Mid-Day"
+		        else if [hour_of_day] >= 14 and [hour_of_day] <= 17 then "Afternoon"
+		        else if [hour_of_day] >= 18 and [hour_of_day] <= 21 then "Evening"
+		        else "Other", type text)
 		in
-		    starbucks_vw_orders_starbucks
+		    #"Periodo Agregado"
 	lineageTag: efc43bd2-001e-4276-b1db-1cbc8607c669
 
 	annotation PBI_NavigationStepName = Navegación
