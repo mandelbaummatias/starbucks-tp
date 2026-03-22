@@ -4,9 +4,9 @@
                      "height":  200,
                      "width":  600,
                      "z":  1,
-                     "x":  630
+                     "x":  10
                  },
-    "name":  "vis_weekly_trend",
+    "name":  "vis_geo_differences",
     "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json",
     "visual":  {
                    "visualType":  "tableEx",
@@ -17,7 +17,7 @@
                                                                                        "text":  {
                                                                                                     "expr":  {
                                                                                                                  "Literal":  {
-                                                                                                                                 "Value":  "\u0027SQL Q4: Weekly Fulfillment Patterns\u0027"
+                                                                                                                                 "Value":  "\u0027SQL Q3: Geographic Differences \u0026 Satisfaction\u0027"
                                                                                                                              }
                                                                                                              }
                                                                                                 },

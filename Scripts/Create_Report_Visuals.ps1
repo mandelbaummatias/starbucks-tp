@@ -90,14 +90,17 @@ function Create-VisualJson {
 
 Write-Host "Generating programmatic visuals for Starbucks Operations Dashboard..."
 
-# Visual 1: Channel Comparison (Drive-Thru vs Mobile)
-Create-VisualJson -VisualName "vis_channel_compare" -VisualType "columnChart" -X 10 -Y 10 -Width 600 -Height 330 -TitleText "Fulfillment Time: Drive-Thru vs Mobile (Morning Rush)"
+# Visual 1: Channel Comparison (Avg_Fulfillment_Time & Total_Orders)
+Create-VisualJson -VisualName "vis_channel_summary" -VisualType "tableEx" -X 10 -Y 10 -Width 600 -Height 180 -TitleText "SQL Q1: Channel Performance During Morning Rush"
 
-# Visual 2: Complexity Impact (Bar Chart)
-Create-VisualJson -VisualName "vis_complexity_bar" -VisualType "barChart" -X 630 -Y 10 -Width 600 -Height 330 -TitleText "Average Delays by Cart Size"
+# Visual 2: Complexity vs Delay by Channel
+Create-VisualJson -VisualName "vis_complexity_impact" -VisualType "tableEx" -X 630 -Y 10 -Width 600 -Height 180 -TitleText "SQL Q2: Complexity vs Delay Correlation"
 
-# Visual 3: Weekly Patterns
-Create-VisualJson -VisualName "vis_weekly_trend" -VisualType "lineChart" -X 10 -Y 360 -Width 600 -Height 330 -TitleText "Weekly Patterns: Critical Days for Staff Planning"
+# Visual 3: Geographic Differences
+Create-VisualJson -VisualName "vis_geo_differences" -VisualType "tableEx" -X 10 -Y 210 -Width 600 -Height 200 -TitleText "SQL Q3: Geographic Differences & Satisfaction"
+
+# Visual 4: Weekly Patterns
+Create-VisualJson -VisualName "vis_weekly_trend" -VisualType "tableEx" -X 630 -Y 210 -Width 600 -Height 200 -TitleText "SQL Q4: Weekly Fulfillment Patterns"
 
 Write-Host "Successfully generated all report visuals in PBIR format!"
 Write-Host "You can now open Starbucks_PowerBI.pbip in Power BI Desktop to see the generated visuals on the canvas."

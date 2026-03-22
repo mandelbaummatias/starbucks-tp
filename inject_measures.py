@@ -9,23 +9,10 @@ measures_to_add = """
 		formatString: 0.00
 		lineageTag: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
 
-	measure 'Morning Rush Avg' = 
-		CALCULATE(
-			[Avg Fulfillment Time], 
-			DimTime[time_period] = "Morning Rush"
-		)
+	measure 'Morning Rush Avg' = CALCULATE([Avg Fulfillment Time], DimTime[time_period] = "Morning Rush")
 		formatString: 0.00
 
-	measure 'Complexity vs Delay Correlation' = 
-		VAR Correlation = 
-			COALESCE(
-				CORRELATE(
-					FactOrders, 
-					FactOrders[num_customizations], 
-					FactOrders[fulfillment_time_min]
-				), 0
-			)
-		RETURN Correlation
+	measure 'Complexity vs Delay Correlation' = VAR Correlation = COALESCE(CORRELATE(FactOrders, FactOrders[num_customizations], FactOrders[fulfillment_time_min]), 0) RETURN Correlation
 """
 
 def inject_measures():
