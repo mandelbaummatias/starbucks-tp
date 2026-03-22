@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS starbucks.raw_orders (
 -- PASO 3: Carga de Datos desde CSV
 -- ============================================================
 
-\copy starbucks.raw_orders FROM 'c:/prueba/Database/starbucks_customer_ordering_patterns.csv' WITH (FORMAT csv, HEADER true);
+\copy starbucks.raw_orders FROM 'Database/starbucks_customer_ordering_patterns.csv' WITH (FORMAT csv, HEADER true);
 
 -- ============================================================
 -- Verificación de Carga
