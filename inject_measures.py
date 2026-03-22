@@ -1,6 +1,8 @@
 import os
 
-tmdl_path = r"c:\prueba\Starbucks_PowerBI.SemanticModel\definition\tables\FactOrders.tmdl"
+# Path to the FactOrders.tmdl file within the Power BI Semantic Model
+current_dir = os.path.dirname(os.path.abspath(__file__))
+tmdl_path = os.path.join(current_dir, "Starbucks_PowerBI.SemanticModel", "definition", "tables", "FactOrders.tmdl")
 
 measures_to_add = """
 	measure 'Avg Fulfillment Time' = AVERAGE(FactOrders[fulfillment_time_min])
