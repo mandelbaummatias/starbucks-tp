@@ -9,7 +9,7 @@
     "name":  "vis_weekly_trend",
     "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json",
     "visual":  {
-                   "visualType":  "tableEx",
+                   "visualType":  "lineChart",
                    "visualContainerObjects":  {
                                                   "title":  [
                                                                 {
@@ -17,7 +17,7 @@
                                                                                        "text":  {
                                                                                                     "expr":  {
                                                                                                                  "Literal":  {
-                                                                                                                                 "Value":  "\u0027SQL Q4: Weekly Fulfillment Patterns\u0027"
+                                                                                                                                 "Value":  "\u0027Weekly Fulfillment Patterns\u0027"
                                                                                                                              }
                                                                                                              }
                                                                                                 },

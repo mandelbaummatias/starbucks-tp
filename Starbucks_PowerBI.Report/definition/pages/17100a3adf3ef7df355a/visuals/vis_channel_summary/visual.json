@@ -9,7 +9,7 @@
     "name":  "vis_channel_summary",
     "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json",
     "visual":  {
-                   "visualType":  "tableEx",
+                   "visualType":  "columnChart",
                    "visualContainerObjects":  {
                                                   "title":  [
                                                                 {
@@ -17,7 +17,7 @@
                                                                                        "text":  {
                                                                                                     "expr":  {
                                                                                                                  "Literal":  {
-                                                                                                                                 "Value":  "\u0027SQL Q1: Channel Performance During Morning Rush\u0027"
+                                                                                                                                 "Value":  "\u0027Channel Performance During Morning Rush\u0027"
                                                                                                                              }
                                                                                                              }
                                                                                                 },

@@ -9,7 +9,7 @@
     "name":  "vis_geo_differences",
     "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json",
     "visual":  {
-                   "visualType":  "tableEx",
+                   "visualType":  "scatterChart",
                    "visualContainerObjects":  {
                                                   "title":  [
                                                                 {
@@ -17,7 +17,7 @@
                                                                                        "text":  {
                                                                                                     "expr":  {
                                                                                                                  "Literal":  {
-                                                                                                                                 "Value":  "\u0027SQL Q3: Geographic Differences \u0026 Satisfaction\u0027"
+                                                                                                                                 "Value":  "\u0027Geographic Differences \u0026 Satisfaction\u0027"
                                                                                                                              }
                                                                                                              }
                                                                                                 },

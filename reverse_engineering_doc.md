@@ -26,19 +26,26 @@ Once you open `Starbucks_PowerBI.pbip`, **you must click each empty visual and d
 ### Visual 1: Channel Comparison (Clustered Column Chart)
 *Answers Question 1.*
 *   **X-axis:** Drag `order_channel` (from `DimChannel`).
-*   **Y-axis:** Drag `fulfillment_time_min` (from `FactOrders`) -> Ensure it is set to **Average**.
-*   **Filters on this visual:** Drag `time_bucket` or `time_period` and filter strictly for "Morning Rush".
+*   **Y-axis:** Drag `Morning Rush Avg` (from `FactOrders`) or `fulfillment_time_min` (set to Average).
+*   **What it shows:** You will see vertical columns where the Drive-Thru visually towers over the others, instantly providing a graphical proof that it is the most delayed channel.
 
 ### Visual 2: Complexity Impact (Clustered Bar Chart)
 *Answers Question 2.*
-*   **Y-axis:** Drag `cart_size` (from `FactOrders`).
-*   **X-axis:** Drag `fulfillment_time_min` (from `FactOrders`) -> Ensure it is set to **Average**.
-*   *(Interpretation: As the Y-axis moves down to larger cart sizes, you will visually see the X-axis bars stretch further to the right, showing increased delays).*
+*   **Y-axis:** Drag `order_channel` (from `DimChannel`).
+*   **X-axis:** Drag `Avg Fulfillment Time` (from `FactOrders`).
+*   **Tooltip:** Drag `cart_size` and `num_customizations` (set to Average).
+*   **What it shows:** You will see horizontal bars stretching to denote delays. Shorter bars (like Mobile App) feature higher complexity tooltips, visibly breaking the intuition that complex orders stretch out wait times.
 
-### Visual 3: Weekly Patterns (Line Chart)
+### Visual 3: Geographic Differences (Scatter Chart)
+*Answers Question 3.*
+*   **Values / Details:** Drag `region` or `store_location_type` (from `DimStore`) to create the plot points.
+*   **X-axis:** Drag `Avg Fulfillment Time` (from `FactOrders`).
+*   **Y-axis:** Drag `Avg Satisfaction` (from `FactOrders`).
+*   **What it shows:** The scatterplot maps out clusters of wait time vs satisfaction. You'll clearly see quadrants forming—such as Urban locations dropping significantly lower on the Satisfaction Y-axis for identical X-axis delay times compared to Suburban points.
+
+### Visual 4: Weekly Patterns (Line Chart)
 *Answers Question 4.*
 *   **X-axis:** Drag `day_of_week` (from `DimDate`).
-*   **Y-axis:** Drag `fulfillment_time_min` (from `FactOrders`) -> Ensure it is set to **Average**.
-*   **Legend:** Drag `order_channel` (from `DimChannel`). This will split the line into two distinct trends, showing if Drive-Thru is consistently slower than Mobile across all days.
-
-> **Note on Question 3 (Geography):** The map visual was removed from the Power BI dashboard to keep the layout clean, as requested. The geographical analysis relies strictly on the output of SQL Query 3.
+*   **Y-axis:** Drag `Avg Fulfillment Time` (from `FactOrders`).
+*   **Legend:** Drag `order_channel` (from `DimChannel`) to generate distinct lines.
+*   **What it shows:** This generates a perfectly flat, horizontal line across Monday-Sunday. This rigidly straight-line trend visually communicates to management that the delay issue is systemic, consistent overhead, rather than fluctuating rush intensity depending on the day of the week.

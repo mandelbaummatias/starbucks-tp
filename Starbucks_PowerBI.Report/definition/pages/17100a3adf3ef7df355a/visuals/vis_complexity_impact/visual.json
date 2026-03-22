@@ -9,7 +9,7 @@
     "name":  "vis_complexity_impact",
     "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json",
     "visual":  {
-                   "visualType":  "tableEx",
+                   "visualType":  "barChart",
                    "visualContainerObjects":  {
                                                   "title":  [
                                                                 {
@@ -17,7 +17,7 @@
                                                                                        "text":  {
                                                                                                     "expr":  {
                                                                                                                  "Literal":  {
-                                                                                                                                 "Value":  "\u0027SQL Q2: Complexity vs Delay Correlation\u0027"
+                                                                                                                                 "Value":  "\u0027Complexity vs Delay Correlation\u0027"
                                                                                                                              }
                                                                                                              }
                                                                                                 },

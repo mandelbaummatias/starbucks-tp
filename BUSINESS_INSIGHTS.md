@@ -104,28 +104,26 @@ The analytical data definitively points to the **Drive-Thru** channel as the pri
 ## 🛠️ Power BI Configuration Guide
 If you want to manually recreate the 4 tables in Power BI Desktop to match the SQL outputs, select the unconfigured visual on the canvas and drag the following fields into the **Columns** well under the *Build a visual* pane:
 
-### Visual 1: Channel Performance (Morning Rush)
-1. **DimChannel** > `order_channel`
-2. **FactOrders** > `Morning Rush Avg` (Measure)
-3. **FactOrders** > `Total Orders` (Measure)
-*(Note: Using the 'Morning Rush Avg' measure automatically filters to 07:00-09:00 hours just like the SQL).*
+### Visual 1: Channel Performance (Clustered Column Chart)
+1. **X-axis:** `DimChannel` > `order_channel`
+2. **Y-axis:** `FactOrders` > `Morning Rush Avg` (Measure)
+3. **Tooltips:** `FactOrders` > `Total Orders` (Measure)
+*(Note: The vertical columns visually prove the Drive-Thru represents the tallest, slowest wait time. Using 'Morning Rush Avg' filters strictly to 07:00-09:00).*
 
-### Visual 2: Complexity vs Delay Correlation
-1. **DimChannel** > `order_channel`
-2. **FactOrders** > `cart_size` *(Set summarization to: Average)*
-3. **FactOrders** > `num_customizations` *(Set summarization to: Average)*
-4. **FactOrders** > `Avg Fulfillment Time` (Measure)
-5. **FactOrders** > `Complexity vs Delay Correlation` (Measure)
-6. **FactOrders** > `Total Orders` (Measure)
+### Visual 2: Complexity vs Delay Correlation (Clustered Bar Chart)
+1. **Y-axis:** `DimChannel` > `order_channel`
+2. **X-axis:** `FactOrders` > `Avg Fulfillment Time` (Measure)
+3. **Tooltips:** `FactOrders` > `cart_size` & `num_customizations` (Average)
+*(Note: Horizontal bars stretch due to delays. Shorter bars unexpectedly feature higher complexity tooltips, visually dissolving the assumption that big orders cause the bottleneck).*
 
-### Visual 3: Geographic Differences
-1. **DimStore** > `store_location_type`
-2. **DimStore** > `region`
-3. **FactOrders** > `Avg Fulfillment Time` (Measure)
-4. **FactOrders** > `Avg Satisfaction` (Measure)
-*(Optional: Sort descending by Avg Fulfillment Time).*
+### Visual 3: Geographic Differences (Scatter Chart)
+1. **Values/Details:** `DimStore` > `store_location_type` or `region`
+2. **X-axis:** `FactOrders` > `Avg Fulfillment Time` (Measure)
+3. **Y-axis:** `FactOrders` > `Avg Satisfaction` (Measure)
+*(Note: Visualizes clusters in performance—Urban points trend lower on the Y-axis (Satisfaction) even at identical X-axis wait times than their Suburban counterparts).*
 
-### Visual 4: Weekly Fulfillment Patterns
-1. **DimDate** > `day_of_week`
-2. **FactOrders** > `Avg Fulfillment Time` (Measure)
-3. **FactOrders** > `Total Orders` (Measure)
+### Visual 4: Weekly Fulfillment Patterns (Line Chart)
+1. **X-axis:** `DimDate` > `day_of_week`
+2. **Y-axis:** `FactOrders` > `Avg Fulfillment Time` (Measure)
+3. **Legend:** `DimChannel` > `order_channel`
+*(Note: Flat, perfectly horizontal lines visually reaffirm that these bottlenecks are consistent, systemic overheads not tied to any single chaotic day).*
