@@ -1,61 +1,119 @@
-# Specification: Power BI & PostgreSQL Connectivity & Validation
+# Plan de Resolución Programática: Starbucks Operational Analysis
 
-## 1. Objective
-Ensure the Power BI project (`.pbip`) correctly consumes data from the newly aligned PostgreSQL database (`starbucks_dw_raw`) and validates the Star Schema implementation.
+Este documento detalla la estrategia para transformar el modelo de datos actual en una herramienta analítica capaz de identificar cuellos de botella operativos, utilizando un enfoque 100% programático basado en archivos `.pbip` (TMDL) y scripting en Python.
 
-## 2. Prerequisites
-- **PostgreSQL Service**: Running on `localhost:5432`.
-- **Database**: `starbucks_dw_raw` must be populated (already completed in previous steps).
-- **Power BI Desktop**: Installed.
-- **Npgsql Driver**: The PostgreSQL .NET provider must be installed for Power BI to connect to Postgres.
+## 1. Análisis de Enfoques Posibles
 
-## 3. Connectivity Alignment Details
-The semantic model is already configured via `expressions.tmdl` to point to:
-- **Source**: `PostgreSQL.Database("localhost", "starbucks_dw_raw")`
-- **Schema**: `starbucks`
-- **Entry Point**: `vw_orders_starbucks`
+### A. Enfoque "Semantic-First" (Recomendado)
+Consiste en enriquecer el archivo `FactOrders.tmdl` con **Medidas DAX** que encapsulan la lógica de negocio.
+*   **Pros**: El análisis se vuelve dinámico. Los gerentes pueden filtrar por cualquier dimensión y la métrica se recalcula.
+*   **Contras**: Requiere manipulación cuidadosa de archivos de texto TMDL.
 
-## 4. Implementation Steps
+### B. Enfoque "Pre-Calculated" (Python + SQL)
+Realizar los cálculos complejos (correlaciones, promedios de horas pico) directamente en Python o en la vista SQL y traer los resultados como tablas estáticas.
+*   **Pros**: Ejecución de algoritmos estadísticos avanzados (regresiones lineales, clustering).
+*   **Contras**: Pierde la interactividad "drill-down" nativa de Power BI.
 
-### Step 4.1: Open Project
-1. Open `c:\prueba\Starbucks_PowerBI.pbip` using Power BI Desktop.
-2. If prompted for credentials, use:
-    - **User**: `postgres`
-    - **Password**: `123456` (or the one configured on your system).
+---
 
-### Step 4.2: Data Refresh
-1. Go to the **Home** tab and click **Refresh**.
-2. Monitor the refresh of the following tables:
-    - `FactOrders` (Main transactions)
-    - `DimCustomer`, `DimStore`, `DimDate`, `DimTime`, `DimChannel` (Dimensions)
-3. Ensure no "Expression.Error" occurs related to the database name or column names.
+## 2. Propuesta de Solución: Programmatic TMDL Injection
 
-### Step 4.3: Model Validation (Star Schema)
-1. Navigate to the **Model View**.
-2. Verify the following relationships (all should be 1:Many, Single Direction):
-    - `DimCustomer[customer_id]` -> `FactOrders[customer_id]`
-    - `DimStore[store_id]` -> `FactOrders[store_id]`
-    - `DimDate[order_date]` -> `FactOrders[order_date]`
-    - `DimTime[order_time]` -> `FactOrders[order_time]`
-    - `DimChannel[channel_key]` -> `FactOrders[channel_key]`
+Utilizaremos Python para "inyectar" las medidas de negocio directamente en el archivo `FactOrders.tmdl`, evitando el uso de la interfaz gráfica.
 
-### Step 4.4: Data Integrity Check (DAX)
-1. Create a simple measure to check the record count:
-   ```dax
-   Total Orders = COUNTROWS('FactOrders')
-   ```
-2. Expected result: **100,000**.
-3. Create a measure for total revenue:
-   ```dax
-   Total Revenue = SUM('FactOrders'[total_spend])
-   ```
+### A. Medidas DAX Críticas a Implementar
 
-## 5. Success Criteria
-- [ ] All tables in the Power BI model refreshed without errors.
-- [ ] `Total Orders` measure returns exactly 100,000.
-- [ ] Visuals in the Report view correctly filter data across dimensions (e.g., Revenue by Region, Revenue by Age Group).
+| Medida | Lógica DAX | Propósito |
+| :--- | :--- | :--- |
+| **Tiempo Promedio Entrega** | `AVERAGE(FactOrders[fulfillment_time_min])` | Métrica base de eficiencia. |
+| **Morning Rush Wait** | `CALCULATE([Tiempo Promedio Entrega], DimTime[time_period] = "Morning Rush")` | Enfoque específico en el problema planteado. |
+| **Channel Gap (DT vs Mobile)** | `CALCULATE([Tiempo Promedio Entrega], DimChannel[order_channel] = "Drive-Thru") - CALCULATE([Tiempo Promedio Entrega], DimChannel[order_channel] = "Mobile App")` | Identificar disparidad de eficiencia. |
+| **Índice de Complejidad** | `AVERAGE(FactOrders[cart_size]) + (AVERAGE(FactOrders[num_customizations]) * 0.5)` | Cuantificar la carga de trabajo por pedido. |
 
-## 6. Rollback / Troubleshooting
-- If the connection fails, check **Data Source Settings** in Power BI and ensure "localhost" is accessible and "starbucks_dw_raw" is the selected database.
-- If columns are missing, verify the `vw_orders_starbucks` view in the database using:
-  `SELECT * FROM starbucks.vw_orders_starbucks LIMIT 1;`
+---
+
+## 3. Scripts de Implementación
+
+### Python: Automatizador de Metadatos (.pbip)
+Este script lee el archivo `FactOrders.tmdl` e inserta las medidas necesarias.
+
+```python
+import os
+
+tmdl_path = r"c:\prueba\Starbucks_PowerBI.SemanticModel\definition\tables\FactOrders.tmdl"
+
+measures_to_add = """
+	measure 'Avg Fulfillment Time' = AVERAGE(FactOrders[fulfillment_time_min])
+		formatString: 0.00
+		lineageTag: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
+
+	measure 'Morning Rush Avg' = 
+		CALCULATE(
+			[Avg Fulfillment Time], 
+			DimTime[time_period] = "Morning Rush"
+		)
+		formatString: 0.00
+
+	measure 'Complexity vs Delay Correlation' = 
+		VAR Correlation = 
+			COALESCE(
+				CORRELATE(
+					FactOrders, 
+					FactOrders[num_customizations], 
+					FactOrders[fulfillment_time_min]
+				), 0
+			)
+		RETURN Correlation
+"""
+
+def inject_measures():
+    with open(tmdl_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    
+    # Encontrar la posición después de la definición de columnas y antes de partitions
+    insert_pos = 0
+    for i, line in enumerate(lines):
+        if 'column' in line:
+            insert_pos = i
+        if 'partition' in line:
+            insert_pos = i - 1
+            break
+            
+    lines.insert(insert_pos + 1, measures_to_add)
+    
+    with open(tmdl_path, 'w', encoding='utf-8') as f:
+        f.writelines(lines)
+    print("Medidas inyectadas exitosamente en el modelo .pbip")
+
+if __name__ == "__main__":
+    inject_measures()
+```
+
+### Power BI: M Script (Power Query) Refinement
+Para asegurar que el "Morning Rush" sea consistente, propondremos un ajuste en `DimTime.tmdl` para que el script de Python también asegure la lógica de periodos:
+
+```powerquery
+let
+    Origen = vw_orders_starbucks,
+    # "Filas filtradas" = Table.SelectColumns(Origen, {"hour_of_day"}),
+    # "Duplicados quitados" = Table.Distinct(#"Filas filtradas"),
+    # "Periodo Agregado" = Table.AddColumn(#"Duplicados quitados", "time_period", each 
+        if [hour_of_day] >= 7 and [hour_of_day] <= 9 then "Morning Rush" 
+        else if [hour_of_day] >= 11 and [hour_of_day] <= 14 then "Mid-day"
+        else "Other"),
+    # "ID Agregado" = Table.AddColumn(#"Periodo Agregado", "time_id", each [hour_of_day])
+in
+    #"ID Agregado"
+```
+
+---
+
+## 4. Plan de Ejecución
+
+1.  **Fase 1: Preparación de Datos**: Validar la vista `vw_orders_starbucks` en PostgreSQL para asegurar que las columnas numéricas no tengan nulos.
+2.  **Fase 2: Programática TMDL**: Ejecutar el script Python para inyectar las medidas DAX. Al ser un archivo de texto, Power BI lo reconocerá en la próxima actualización de metadatos.
+3.  **Fase 3: Validación Operativa**:
+    *   Verificar que `Avg Fulfillment Time` correlacione positivamente con `num_customizations`.
+    *   Generar un reporte visual (vía DAX Queries si es necesario) para confirmar que el Drive-Thru es o no más lento que el Mobile order durante el Rush.
+
+> [!IMPORTANT]
+> Al manipular el `.pbip` directamente, no es necesario abrir Desktop. Solo se requiere que los servicios de Power BI o un proceso de CI/CD procesen estos cambios de metadatos.
