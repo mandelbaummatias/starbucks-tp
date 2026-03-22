@@ -1,6 +1,15 @@
 table DimChannel
 	lineageTag: 63230b13-ca29-416c-8ac2-2b1035e926c1
 
+	column channel_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2c4b3069-ab90-4e5c-877a-c152f1d690d8
+		summarizeBy: none
+		sourceColumn: channel_id
+
+		annotation SummarizationSetBy = Automatic
+
 	column order_channel
 		dataType: string
 		lineageTag: 9b4e882d-4425-4c47-a93c-b9d18eec3cd4
@@ -9,19 +18,12 @@ table DimChannel
 
 		annotation SummarizationSetBy = Automatic
 
-	column order_ahead
-		dataType: string
+	column is_order_ahead
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 289ba5bf-e42a-44d5-80b8-507cf232f17f
 		summarizeBy: none
-		sourceColumn: order_ahead
-
-		annotation SummarizationSetBy = Automatic
-
-	column channel_key
-		dataType: string
-		lineageTag: 2e67f10e-8d94-4e11-8cec-0dd41e469a23
-		summarizeBy: none
-		sourceColumn: channel_key
+		sourceColumn: is_order_ahead
 
 		annotation SummarizationSetBy = Automatic
 
@@ -30,12 +32,13 @@ table DimChannel
 		source =
 				let
 				    Origen = vw_orders_starbucks,
-				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"order_ahead", type text}}),
-				    #"Personalizada agregada" = Table.AddColumn(#"Tipo cambiado", "channel_key", each [order_channel] & "|" & [order_ahead]),
-				    #"Columnas quitadas" = Table.RemoveColumns(#"Personalizada agregada",{"customer_id", "order_id", "order_date", "order_time", "day_of_week", "store_id", "store_location_type", "region", "customer_age_group", "customer_gender", "is_rewards_member", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_datetime", "day_of_month", "month_num", "quarter_num", "customer_satisfaction", "year_num", "hour_of_day", "time_period"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas")
+				    #"Filas filtradas" = Table.SelectColumns(Origen, {"order_channel", "order_ahead"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas"),
+				    #"Indice agregado" = Table.AddIndexColumn(#"Duplicados quitados", "channel_id", 1, 1, Int64.Type),
+				    #"Columna renombrada" = Table.RenameColumns(#"Indice agregado",{{"order_ahead", "is_order_ahead"}}),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columna renombrada",{{"is_order_ahead", type logical}})
 				in
-				    #"Duplicados quitados"
+				    #"Tipo cambiado"
 
 	annotation PBI_NavigationStepName = Navegación
 

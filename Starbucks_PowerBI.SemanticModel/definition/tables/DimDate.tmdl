@@ -1,12 +1,21 @@
 table DimDate
 	lineageTag: 85e3cde8-117a-4e36-8116-3cdf90d1f3e7
 
-	column date
+	column date_id
+		dataType: int64
+		formatString: 0
+		lineageTag: a7572e08-b40e-4326-a864-b72ea999f7a8
+		summarizeBy: none
+		sourceColumn: date_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
 		dataType: dateTime
 		formatString: Long Date
 		lineageTag: 881318cc-3143-4355-b43e-ab7dd58b3723
 		summarizeBy: none
-		sourceColumn: date
+		sourceColumn: order_date
 
 		variation Variación
 			isDefault
@@ -14,7 +23,6 @@ table DimDate
 			defaultHierarchy: LocalDateTable_d2151c68-6770-42e3-a2ae-86b6bfde072b.'Jerarquía de fechas'
 
 		annotation SummarizationSetBy = Automatic
-
 		annotation UnderlyingDateTimeDataType = Date
 
 	column day_of_week
@@ -26,53 +34,69 @@ table DimDate
 		annotation SummarizationSetBy = Automatic
 
 	column day_of_month
-		dataType: double
+		dataType: int64
+		formatString: 0
 		lineageTag: 26d6367d-ed5c-4087-ad0d-2ee257df3bdf
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: day_of_month
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	column month_num
-		dataType: double
+	column month
+		dataType: int64
+		formatString: 0
 		lineageTag: b97856db-85b7-452e-8ee1-bf239fcca3db
-		summarizeBy: sum
-		sourceColumn: month_num
+		summarizeBy: none
+		sourceColumn: month
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	column quarter_num
-		dataType: double
+	column quarter
+		dataType: int64
+		formatString: 0
 		lineageTag: bcb8738f-f6a8-4a37-82da-c272917a29a6
-		summarizeBy: sum
-		sourceColumn: quarter_num
+		summarizeBy: none
+		sourceColumn: quarter
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	column year_num
-		dataType: double
+	column year
+		dataType: int64
+		formatString: 0
 		lineageTag: b6faf5cd-1e13-4caf-80b2-93797d628990
-		summarizeBy: sum
-		sourceColumn: year_num
+		summarizeBy: none
+		sourceColumn: year
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+	hierarchy 'Jerarquía Calendario'
+		lineageTag: d81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Año
+			column: year
+			lineageTag: e81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Trimestre
+			column: quarter
+			lineageTag: f81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Mes
+			column: month
+			lineageTag: 081318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Día
+			column: day_of_month
+			lineageTag: 181318cc-3143-4355-b43e-ab7dd58b3723
 
 	partition DimDate = m
 		mode: import
 		source =
 				let
 				    Origen = vw_orders_starbucks,
-				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"customer_id", "order_id", "order_time", "order_channel", "store_id", "store_location_type", "region", "customer_age_group", "customer_gender", "is_rewards_member", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_ahead", "customer_satisfaction", "order_datetime", "hour_of_day", "time_period"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas"),
-				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Duplicados quitados",{{"order_date", "date"}})
+				    #"Filas filtradas" = Table.SelectColumns(Origen, {"order_date", "day_of_week", "day_of_month", "month_num", "quarter_num", "year_num"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas"),
+				    #"Personalizada agregada" = Table.AddColumn(#"Duplicados quitados", "date_id", each Number.From(Date.ToText([order_date], "yyyyMMdd")), type number),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Personalizada agregada",{{"month_num", "month"}, {"quarter_num", "quarter"}, {"year_num", "year"}})
 				in
 				    #"Columnas con nombre cambiado"
 

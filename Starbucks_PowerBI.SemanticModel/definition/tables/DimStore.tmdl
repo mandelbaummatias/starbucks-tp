@@ -25,13 +25,28 @@ table DimStore
 
 		annotation SummarizationSetBy = Automatic
 
+	hierarchy 'Jerarquía Geográfica'
+		lineageTag: f81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Región
+			column: region
+			lineageTag: g81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level 'Tipo de Ubicación'
+			column: store_location_type
+			lineageTag: h81318cc-3143-4355-b43e-ab7dd58b3723
+
+		level Tienda
+			column: store_id
+			lineageTag: i81318cc-3143-4355-b43e-ab7dd58b3723
+
 	partition DimStore = m
 		mode: import
 		source =
 				let
 				    Origen = vw_orders_starbucks,
-				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"customer_id", "order_id", "order_date", "order_time", "day_of_week", "order_channel", "customer_age_group", "customer_gender", "is_rewards_member", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "drink_category", "has_food_item", "order_ahead", "customer_satisfaction", "order_datetime", "day_of_month", "month_num", "quarter_num", "year_num", "hour_of_day", "time_period"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Columnas quitadas")
+				    #"Filas filtradas" = Table.SelectColumns(Origen, {"store_id", "store_location_type", "region"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas", {"store_id"})
 				in
 				    #"Duplicados quitados"
 
