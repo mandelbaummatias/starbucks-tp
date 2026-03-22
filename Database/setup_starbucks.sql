@@ -1,5 +1,5 @@
 -- ============================================================
--- PASO 1: Crear schema de trabajo
+-- STEP 2: RUN THIS SCRIPT CONNECTED TO 'starbucks_dw_raw'
 -- ============================================================
 
 CREATE SCHEMA IF NOT EXISTS starbucks;

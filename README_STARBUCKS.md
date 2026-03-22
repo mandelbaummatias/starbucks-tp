@@ -1,12 +1,14 @@
 # Starbucks Ordering Patterns Database Documentation
 
-This database contains customer ordering patterns from Starbucks, processed for analytical purposes.
+This database contains customer ordering patterns from Starbucks, processed for analytical purposes. It is aligned with the Power BI Model.
 
 ## 🗄️ Database Connection Details
-- **Database Name**: `starbucks_db`
+- **Server**: `localhost`
+- **Database Name**: `starbucks_dw_raw`
+- **Schema**: `starbucks`
 - **User**: `postgres`
-- **Password**: `123456`
-- **Main Schema**: `starbucks`
+- **Port**: `5432`
+- **Main View**: `vw_orders_starbucks`
 
 ## 📋 Data Structure
 ### 1. Raw Data Table: `starbucks.raw_orders`
@@ -43,15 +45,16 @@ GROUP BY region
 ORDER BY total_revenue DESC;
 ```
 
-### Check Satisfaction by Loyalty
-```sql
-SELECT 
-    is_rewards_member, 
-    ROUND(AVG(customer_satisfaction), 2) as avg_satisfaction
-FROM starbucks.vw_orders_starbucks
-GROUP BY is_rewards_member;
-```
+## 🛠️ Setup Script (2-Step Alignment)
 
-## 🛠️ Setup Script
-The database was set up using `c:\prueba\Database\setup_starbucks.sql`.
-If the view needs to be updated, use `c:\prueba\Database\fix_view.sql`.
+To align with the Power BI project:
+
+1. **Phase 1: Database Initialization**
+   Run the following from a master `postgres` connection:
+   - `psql -U postgres -d postgres -f c:\prueba\Database\01_SETUP_DATABASE.sql`
+
+2. **Phase 2: Schema & Data Load**
+   Run the following against the newly created database:
+   - `psql -U postgres -d starbucks_dw_raw -f c:\prueba\Database\setup_starbucks.sql`
+
+Once complete, the **Power BI project** will be able to "Refresh" successfully without any modifications.
