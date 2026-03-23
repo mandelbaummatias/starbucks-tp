@@ -74,24 +74,24 @@ erDiagram
 
 ### 📦 Dimensiones (5 Tablas)
 
-| Dimensión | Clave Subrogada | Business Key | Atributos | Propósito |
-|-----------|-----------------|--------------|-----------|-----------|
-| **dim_channel** | `channel_id` (SERIAL) | `order_channel` + `is_order_ahead` | 2 atributos | Segmentar por canal (Drive-Thru, Mobile, Kiosk, In-Store) |
-| **dim_store** | `store_id_pk` (SERIAL) | `store_id` | `store_location_type` (Urban/Suburban/Rural), `region` (Northeast/Midwest/Southwest/West) | Análisis geográfico y tipos de tienda |
-| **dim_customer** | `customer_id_pk` (SERIAL) | `customer_id` | `customer_age_group`, `customer_gender`, `is_rewards_member` | Segmentación demográfica y análisis de lealtad |
-| **dim_date** | `date_id` (INT YYYYMMDD) | `full_date` | `day_of_week`, `day_of_month`, `month_num`, `quarter_num`, `year_num` | Análisis temporal con aritmética rápida |
-| **dim_time** | `time_id` (INT 0-23) | `hour_of_day` | `order_time`, `time_period` (Morning Rush / Mid-Day / Afternoon / Evening / Other) | Análisis horario y períodos de negocio |
+| Dimensión        | Clave Subrogada           | Business Key                       | Atributos                                                                                 | Propósito                                                 |
+| ---------------- | ------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **dim_channel**  | `channel_id` (SERIAL)     | `order_channel` + `is_order_ahead` | 2 atributos                                                                               | Segmentar por canal (Drive-Thru, Mobile, Kiosk, In-Store) |
+| **dim_store**    | `store_id_pk` (SERIAL)    | `store_id`                         | `store_location_type` (Urban/Suburban/Rural), `region` (Northeast/Midwest/Southwest/West) | Análisis geográfico y tipos de tienda                     |
+| **dim_customer** | `customer_id_pk` (SERIAL) | `customer_id`                      | `customer_age_group`, `customer_gender`, `is_rewards_member`                              | Segmentación demográfica y análisis de lealtad            |
+| **dim_date**     | `date_id` (INT YYYYMMDD)  | `full_date`                        | `day_of_week`, `day_of_month`, `month_num`, `quarter_num`, `year_num`                     | Análisis temporal con aritmética rápida                   |
+| **dim_time**     | `time_id` (INT 0-23)      | `hour_of_day`                      | `order_time`, `time_period` (Morning Rush / Mid-Day / Afternoon / Evening / Other)        | Análisis horario y períodos de negocio                    |
 
 ### 📊 Tabla de Hechos (1 Tabla)
 
-| Aspecto | Detalles |
-|--------|----------|
-| **Tabla** | `fact_orders` |
-| **Rows** | ~100,000 órdenes |
-| **Clave Primaria** | `order_id_pk` (SERIAL) |
-| **Claves Foráneas** | 5 FKs a todas las dimensiones |
-| **Dimensión Degenerada** | `order_id`, `drink_category`, `has_food_item`, `is_order_ahead` |
-| **Medidas (Measures)** | `cart_size`, `num_customizations`, `total_spend`, `fulfillment_time_min` ⭐, `customer_satisfaction` |
+| Aspecto                  | Detalles                                                                                             |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| **Tabla**                | `fact_orders`                                                                                        |
+| **Rows**                 | ~100,000 órdenes                                                                                     |
+| **Clave Primaria**       | `order_id_pk` (SERIAL)                                                                               |
+| **Claves Foráneas**      | 5 FKs a todas las dimensiones                                                                        |
+| **Dimensión Degenerada** | `order_id`, `drink_category`, `has_food_item`, `is_order_ahead`                                      |
+| **Medidas (Measures)**   | `cart_size`, `num_customizations`, `total_spend`, `fulfillment_time_min` ⭐, `customer_satisfaction` |
 
 ---
 
@@ -135,18 +135,23 @@ Cardinality Notation (||--o{):
 ## Diseño de Claves
 
 ### Claves Subrogadas (Surrogate Keys)
+
 Las dimensiones usan **SERIAL** para las claves primarias:
+
 - `dim_channel.channel_id` (auto-incremented)
 - `dim_store.store_id_pk` (auto-incremented)
 - `dim_customer.customer_id_pk` (auto-incremented)
 
 **Ventajas:**
+
 - ✅ Protegen contra cambios en claves naturales
 - ✅ Simplifican JOINs con espacios clave pequeños (INT vs VARCHAR)
 - ✅ Soportan historización (SCD Type 2)
 
 ### Claves de Negocio (Business Keys)
+
 Son auto-descriptivas y únicas:
+
 - `dim_channel`: (`order_channel`, `is_order_ahead`)
 - `dim_store`: `store_id`
 - `dim_customer`: `customer_id`
@@ -154,6 +159,7 @@ Son auto-descriptivas y únicas:
 - `dim_time`: `hour_of_day` (0-23)
 
 **Ventajas:**
+
 - ✅ Permiten auditoría de datos de fuente
 - ✅ Facilitan JOINs ETL durante carga
 - ✅ Soportan reconciliación origen ↔ destino
@@ -165,16 +171,19 @@ Son auto-descriptivas y únicas:
 La tabla `fact_orders` contiene **4 medidas principales** y **1 degenerate dimension**:
 
 ### Medidas Aditivas (Aggregables)
-| Medida | Tipo | Rango | Uso |
-|--------|------|-------|-----|
-| `cart_size` | INT | 1-5 items | Análisis de canasta |
-| `num_customizations` | INT | 0-10+ | Complejidad orden |
-| `total_spend` | DECIMAL(10,2) | $2-$25 | Revenue, ticket promedio |
-| `fulfillment_time_min` | DECIMAL(5,2) | 2-10 min | ⭐ **KPI CRÍTICO** |
-| `customer_satisfaction` | INT | 1-5 stars | NPS, satisfacción |
+
+| Medida                  | Tipo          | Rango     | Uso                      |
+| ----------------------- | ------------- | --------- | ------------------------ |
+| `cart_size`             | INT           | 1-5 items | Análisis de canasta      |
+| `num_customizations`    | INT           | 0-10+     | Complejidad orden        |
+| `total_spend`           | DECIMAL(10,2) | $2-$25    | Revenue, ticket promedio |
+| `fulfillment_time_min`  | DECIMAL(5,2)  | 2-10 min  | ⭐ **KPI CRÍTICO**       |
+| `customer_satisfaction` | INT           | 1-5 stars | NPS, satisfacción        |
 
 ### Dimensión Degenerada
+
 Atributos que residen en fact pero no tienen tabla dim separada:
+
 - `order_id`: ID transaccional de la orden
 - `drink_category`: Tipo de bebida (Coffee, Tea, Smoothie, etc.)
 - `has_food_item`: Si la orden incluye comida
@@ -201,6 +210,7 @@ CREATE INDEX idx_fo_customer  ON fact_orders(customer_id_pk);
 ## Validación del Diagrama
 
 ✅ **Mermaid Syntax Check:**
+
 - [x] 5 dimensiones presentes (dim_channel, dim_store, dim_customer, dim_date, dim_time)
 - [x] 1 tabla hecho con 5 FKs
 - [x] Cardinalidad explícita (||--o{)
@@ -208,6 +218,7 @@ CREATE INDEX idx_fo_customer  ON fact_orders(customer_id_pk);
 - [x] Tipos de datos indicados
 
 ✅ **Completitud:**
+
 - [x] Todas las columnas de [02_CREATE_STAR_SCHEMA.sql](../Database/02_CREATE_STAR_SCHEMA.sql) incluidas
 - [x] Relaciones FK representadas
 - [x] Claves primarias y únicas marcadas
@@ -215,6 +226,6 @@ CREATE INDEX idx_fo_customer  ON fact_orders(customer_id_pk);
 
 ---
 
-**Diagrama generado:** 23 de Marzo, 2026  
-**Schema Version:** PostgreSQL (starbucks_dw_raw.star)  
+**Diagrama generado:** 23 de Marzo, 2026
+**Schema Version:** PostgreSQL (starbucks_dw_raw.star)
 **Status:** ✅ Listo para validación en https://mermaid.live

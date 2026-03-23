@@ -1,10 +1,11 @@
 # STARBUCKS DATA WAREHOUSE
+
 ## Documento de Entrega Final - Trabajo Práctico
 
-**Fecha de Entrega:** 23 de Marzo, 2026  
-**Institución:** [Institución Académica]  
-**Asignatura:** Data Warehousing  
-**Equipo:** [Nombres de integrantes]  
+**Fecha de Entrega:** 23 de Marzo, 2026
+**Institución:** [Institución Académica]
+**Asignatura:** Data Warehousing
+**Equipo:** [Nombres de integrantes]
 **Estado:** APROBADO PARA ENTREGA
 
 ---
@@ -48,7 +49,7 @@ Se construyó un Data Warehouse analítico con arquitectura Star Schema que resp
 
 ### Impacto Potencial
 
-Reducción de 0.5 minutos en cumplimiento Drive-Thru = $50,000 USD anuales por tienda  
+Reducción de 0.5 minutos en cumplimiento Drive-Thru = $50,000 USD anuales por tienda
 Extrapolado a 500 tiendas Drive-Thru en USA = $25+ millones USD en eficiencia potencial anual
 
 ---
@@ -65,16 +66,17 @@ El modelo de negocio Quick Service Restaurant (QSR) de Starbucks opera sobre má
 
 #### Canales de Distribución
 
-| Canal | Participación Volumen | Tiempo Cumplimiento Promedio | Características |
-|-------|----------------------|------------------------------|-----------------|
-| Drive-Thru | 25% | 5.79 minutos | Bottleneck identificado |
-| Mobile App | 30% | 4.50 minutos | Mayor eficiencia |
-| In-Store Cashier | 20% | 3.22 minutos | Más rápido |
-| Kiosk | 5% | 4.00 minutos | Automatización futura |
+| Canal            | Participación Volumen | Tiempo Cumplimiento Promedio | Características         |
+| ---------------- | --------------------- | ---------------------------- | ----------------------- |
+| Drive-Thru       | 25%                   | 5.79 minutos                 | Bottleneck identificado |
+| Mobile App       | 30%                   | 4.50 minutos                 | Mayor eficiencia        |
+| In-Store Cashier | 20%                   | 3.22 minutos                 | Más rápido              |
+| Kiosk            | 5%                    | 4.00 minutos                 | Automatización futura   |
 
 #### Geografía Operativa
 
 Operaciones distribuidas en cuatro regiones de Estados Unidos:
+
 - Northeast: Boston, Nueva York, Philadelphia (alta densidad urbana)
 - Midwest: Chicago, Detroit, Cleveland (mezcla urbana-suburbana)
 - Southwest: Dallas, Phoenix, Denver (expansión rápida)
@@ -84,12 +86,12 @@ Tiendas clasificadas por tipo de ubicación: Urban (30-40%), Suburban (40-50%), 
 
 ### Indicadores de Negocio Clave
 
-| KPI | Meta Corporativa | Realidad (Análisis) | Brecha |
-|-----|------------------|-------------------|--------|
-| Tiempo Cumplimiento Morning Rush | < 4.0 minutos | 4.56 minutos | +14% |
-| Satisfacción del Cliente | 4.5+ | 3.66/5 | -18% |
-| Eficiencia Canal Drive-Thru | ±5% vs otros | +28.6% más lento | -28.6% |
-| Costo de Labor (ineficiencia anual) | Minimizado | $250M+ USD | Alto |
+| KPI                                 | Meta Corporativa | Realidad (Análisis) | Brecha |
+| ----------------------------------- | ---------------- | ------------------- | ------ |
+| Tiempo Cumplimiento Morning Rush    | < 4.0 minutos    | 4.56 minutos        | +14%   |
+| Satisfacción del Cliente            | 4.5+             | 3.66/5              | -18%   |
+| Eficiencia Canal Drive-Thru         | ±5% vs otros     | +28.6% más lento    | -28.6% |
+| Costo de Labor (ineficiencia anual) | Minimizado       | $250M+ USD          | Alto   |
 
 ### Importancia de la Eficiencia Operativa
 
@@ -108,6 +110,7 @@ La estructura económica del negocio Starbucks depende de:
 ### Necesidad Empresarial
 
 Sin visibilidad analítica, Starbucks carecía de:
+
 - Identificación de qué canal específico causa delays
 - Evidencia sobre la relación complejidad-delay
 - Benchmarking geográfico para accountability gerencial
@@ -116,6 +119,7 @@ Sin visibilidad analítica, Starbucks carecía de:
 ### Oportunidad Económica
 
 Una tienda Drive-Thru con 6,000 órdenes diarias:
+
 - Delay promedio actual: 5.79 minutos
 - Oportunidad: alcanzar 4.50 minutos (Mobile App nivel)
 - Ahorro de labor: 1.29 minutos × 6,000 órdenes = 7,740 minutos/día
@@ -137,11 +141,12 @@ Una tienda Drive-Thru con 6,000 órdenes diarias:
 
 ### Datos Origen (OLTP)
 
-**Tabla:** starbucks.raw_orders  
-**Registros:** 100,000 órdenes  
+**Tabla:** starbucks.raw_orders
+**Registros:** 100,000 órdenes
 **Fuente:** starbucks_customer_ordering_patterns.csv
 
 Campos principales:
+
 - Transacción: order_id, order_date, order_time, order_channel
 - Cliente: customer_id, customer_age_group, customer_gender, is_rewards_member
 - Ubicación: store_id, store_location_type, region
@@ -165,6 +170,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 #### Tablas de Dimensión
 
 **Dimension: dim_channel**
+
 - Clave Subrogada: channel_id (SERIAL)
 - Clave de Negocio: order_channel, is_order_ahead
 - Atributos: 2
@@ -172,6 +178,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 - Propósito: Segmentar análisis por canal de distribución
 
 **Dimension: dim_store**
+
 - Clave Subrogada: store_id_pk (SERIAL)
 - Clave de Negocio: store_id
 - Atributos: store_location_type, region
@@ -179,6 +186,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 - Propósito: Análisis geográfico y por tipo de ubicación
 
 **Dimension: dim_customer**
+
 - Clave Subrogada: customer_id_pk (SERIAL)
 - Clave de Negocio: customer_id
 - Atributos: customer_age_group, customer_gender, is_rewards_member
@@ -186,6 +194,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 - Propósito: Segmentación demográfica y análisis de lealtad
 
 **Dimension: dim_date**
+
 - Clave Primaria: date_id (INT formato YYYYMMDD)
 - Clave de Negocio: full_date
 - Atributos: day_of_week, day_of_month, month_num, quarter_num, year_num
@@ -193,6 +202,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 - Propósito: Análisis temporal con aritmética rápida
 
 **Dimension: dim_time**
+
 - Clave Primaria: time_id (INT 0-23)
 - Clave de Negocio: hour_of_day
 - Atributos: order_time, time_period (Morning Rush / Mid-Day / Afternoon / Evening)
@@ -202,6 +212,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 #### Tabla de Hechos
 
 **Fact: fact_orders**
+
 - Clave Primaria: order_id_pk (SERIAL)
 - Claves Foráneas: channel_id, store_id_pk, customer_id_pk, date_id, time_id
 - Dimensión Degenerada: order_id, drink_category, has_food_item, is_order_ahead
@@ -212,6 +223,7 @@ Implementación de modelo dimensional desnormalizado con 5 dimensiones y 1 tabla
 ### Cardinalidades
 
 Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
+
 - 1 canal : N órdenes
 - 1 tienda : N órdenes
 - 1 cliente : N órdenes
@@ -225,7 +237,7 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 ### Proceso ETL de Alto Nivel
 
 ```
-[CSV Origen] 
+[CSV Origen]
     ↓
 [Carga Staging - starbucks.raw_orders]
     ↓
@@ -242,20 +254,20 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 
 ### Mapeo Principal
 
-| Componente Origen (CSV) | Destino | Lógica Aplicada |
-|-------------------------|---------|-----------------|
-| order_channel, order_ahead | dim_channel | DISTINCT por canal |
-| store_id, location_type, region | dim_store | DISTINCT por store_id |
-| customer_id, age, gender, rewards | dim_customer | DISTINCT por customer_id |
-| order_date | dim_date | Generar YYYYMMDD, componentes |
-| order_time (hora) | dim_time | EXTRACT(HOUR), clasificar período |
-| Todos campos | fact_orders | JOINs a dims, insertar con FKs |
+| Componente Origen (CSV)           | Destino      | Lógica Aplicada                   |
+| --------------------------------- | ------------ | --------------------------------- |
+| order_channel, order_ahead        | dim_channel  | DISTINCT por canal                |
+| store_id, location_type, region   | dim_store    | DISTINCT por store_id             |
+| customer_id, age, gender, rewards | dim_customer | DISTINCT por customer_id          |
+| order_date                        | dim_date     | Generar YYYYMMDD, componentes     |
+| order_time (hora)                 | dim_time     | EXTRACT(HOUR), clasificar período |
+| Todos campos                      | fact_orders  | JOINs a dims, insertar con FKs    |
 
 ### Herramienta ETL
 
-**Lenguaje:** Python 3.8+  
-**Librerías:** pandas, sqlalchemy, psycopg2  
-**Estrategia Carga:** Full Refresh (TRUNCATE + INSERT)  
+**Lenguaje:** Python 3.8+
+**Librerías:** pandas, sqlalchemy, psycopg2
+**Estrategia Carga:** Full Refresh (TRUNCATE + INSERT)
 **Validación:** Verificación de conteos, NULL checks, FK integrity
 
 **Archivo:** Scripts/etl_starbucks.py
@@ -268,11 +280,13 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 
 **Elección:** Star Schema (desnormalizado)
 
-**Alternativa Rechazada:** 
+**Alternativa Rechazada:**
+
 - Snowflake Schema (normalización adicional)
 - Vistas planas (OLTP tradicional)
 
 **Justificación:**
+
 - Rendimiento OLAP superior (índices sobre FKs, JOINs rápidos)
 - Claridad para business users (dimensiones exponen vocabulario negocio)
 - Compatibilidad nativa Power BI (relaciones automáticas)
@@ -284,11 +298,13 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 **Elección:** Python + pandas + SQLAlchemy
 
 **Alternativa Rechazada:**
+
 - SQL puro
 - dbt
 - Herramientas comerciales
 
 **Justificación:**
+
 - Flexibilidad transformación (generación SKs, clasificación períodos via apply())
 - Reutilización (mismo script desde CLI, Python visual Power BI, Airflow)
 - Depuración (logs de consola traceables)
@@ -296,11 +312,13 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 
 ### Decisión 3: Claves Subrogadas vs. Naturales
 
-**Elección:** 
+**Elección:**
+
 - Surrogate Keys (SERIAL) para dim_channel, dim_store, dim_customer
 - Business Keys (INT YYYYMMDD, INT 0-23) para dim_date, dim_time
 
 **Justificación:**
+
 - Surrogate Keys: protección contra cambios BK, soportan SCD Type 2 historización
 - Business Keys para Tiempo: auto-descriptivos, aritmética rápida (BETWEEN), eliminan lookup
 
@@ -311,6 +329,7 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 **Alternativa Rechazada:** Incremental CDC
 
 **Justificación:**
+
 - Dataset histórico estático (no flujo real-time)
 - Simplicidad (ETL idempotente, sin estado)
 - Velocidad aceptable (100k filas = segundos)
@@ -321,6 +340,7 @@ Todas las relaciones siguen patrón 1:N desnormalizado (Star Schema):
 **Elección:** FK constraints en BD + validación ETL
 
 **Implementación:**
+
 ```sql
 ALTER TABLE fact_orders ADD CONSTRAINT fk_channel
   FOREIGN KEY (channel_id) REFERENCES dim_channel(channel_id);
@@ -337,12 +357,12 @@ ALTER TABLE fact_orders ADD CONSTRAINT fk_channel
 
 **Respuesta:** Drive-Thru es significativamente más lento
 
-| Canal | Tiempo Cumplimiento Promedio | Diferencia vs. In-Store |
-|-------|--------|--------------------------|
-| Drive-Thru | 5.79 minutos | +80% (bottleneck) |
-| Mobile App | 4.50 minutos | +39.8% |
-| Kiosk | 4.00 minutos | +24.2% |
-| In-Store Cashier | 3.22 minutos | Baseline |
+| Canal            | Tiempo Cumplimiento Promedio | Diferencia vs. In-Store |
+| ---------------- | ---------------------------- | ----------------------- |
+| Drive-Thru       | 5.79 minutos                 | +80% (bottleneck)       |
+| Mobile App       | 4.50 minutos                 | +39.8%                  |
+| Kiosk            | 4.00 minutos                 | +24.2%                  |
+| In-Store Cashier | 3.22 minutos                 | Baseline                |
 
 **Insight:** Gap de 2.57 minutos entre Drive-Thru e In-Store = 25,700 minutos/día en ineficiencia operacional en el dataset
 
@@ -352,11 +372,11 @@ ALTER TABLE fact_orders ADD CONSTRAINT fk_channel
 
 **Respuesta:** NO - Correlación prácticamente nula
 
-| Métrica | Hallazgo |
-|---------|----------|
-| Correlación (Customizations vs Delay) | -0.01 a +0.02 (NINGUNA) |
-| Mobile App Customizations | 2.51 (casi 2x Drive-Thru) |
-| Mobile App Speed | 4.50 min (24% MÁS rápido) |
+| Métrica                               | Hallazgo                  |
+| ------------------------------------- | ------------------------- |
+| Correlación (Customizations vs Delay) | -0.01 a +0.02 (NINGUNA)   |
+| Mobile App Customizations             | 2.51 (casi 2x Drive-Thru) |
+| Mobile App Speed                      | 4.50 min (24% MÁS rápido) |
 
 **Insight Crítico:** Mobile App procesa órdenes 2x más complejas 24% más rápido que Drive-Thru. El delay NO es causado por complejidad de bebida sino por fricción de proceso (pago, UI, handoff físico).
 
@@ -368,7 +388,7 @@ ALTER TABLE fact_orders ADD CONSTRAINT fk_channel
 
 **Respuesta:** Mínimas variación nacional
 
-Rango de variación: 4.52 - 4.67 minutos  
+Rango de variación: 4.52 - 4.67 minutos
 Varianza total: 0.15 minutos (0.3%)
 
 **Observación:** Ubicaciones Rural ligeramente más lento (4.67 min), pero diferencia no es crítica
@@ -381,10 +401,10 @@ Varianza total: 0.15 minutos (0.3%)
 
 **Respuesta:** Consistencia perfecta - NINGÚN patrón temporal
 
-| Día de Semana | Tiempo Cumplimiento | Órdenes |
-|----------------|-------------------|---------|
-| Lunes a Domingo | 4.53-4.56 minutos | 14,100-14,400 |
-| Varianza | 0.03 minutos (0.7%) | ±160 órdenes |
+| Día de Semana   | Tiempo Cumplimiento | Órdenes       |
+| --------------- | ------------------- | ------------- |
+| Lunes a Domingo | 4.53-4.56 minutos   | 14,100-14,400 |
+| Varianza        | 0.03 minutos (0.7%) | ±160 órdenes  |
 
 **Insight:** Demanda y delays completamente planos toda la semana. Bottleneck es sistémico (proceso/hardware), no temporal.
 
@@ -475,27 +495,30 @@ psql -U postgres -d starbucks_dw_raw -f Database/04_BUSINESS_QUERIES_STAR.sql
 
 ### Conformidad con Requerimientos del TP
 
-| Requisito | Status | Evidencia |
-|-----------|--------|-----------|
-| Star Schema con 5+ dimensiones | Completo | 5 dimensiones + 1 fact |
-| 100k registros en fact table | Completo | fact_orders: 100,000 filas |
-| FK constraints y integridad | Completo | 5 FKs activas, sin huérfanos |
-| ETL automatizado | Completo | Scripts/etl_starbucks.py |
-| 4 Business Questions respondidas | Completo | BUSINESS_INSIGHTS análisis |
-| Power BI integrado | Completo | 4 visuals + 5 medidas DAX |
-| Documentación profesional | Completo | 10+ documentos |
+| Requisito                        | Status   | Evidencia                    |
+| -------------------------------- | -------- | ---------------------------- |
+| Star Schema con 5+ dimensiones   | Completo | 5 dimensiones + 1 fact       |
+| 100k registros en fact table     | Completo | fact_orders: 100,000 filas   |
+| FK constraints y integridad      | Completo | 5 FKs activas, sin huérfanos |
+| ETL automatizado                 | Completo | Scripts/etl_starbucks.py     |
+| 4 Business Questions respondidas | Completo | BUSINESS_INSIGHTS análisis   |
+| Power BI integrado               | Completo | 4 visuals + 5 medidas DAX    |
+| Documentación profesional        | Completo | 10+ documentos               |
 
 ### Impacto Empresarial
 
 **Corto Plazo (1-4 semanas):**
+
 - Auditoría de workflow Drive-Thru en piloto 10-20 tiendas
 - Hipótesis: optimizaciones pago, UI, handoff
 
 **Mediano Plazo (1-3 meses):**
+
 - Implementación cambios ganadores
 - Monitoreo vía Data Warehouse + Power BI
 
 **Largo Plazo (3-12 meses):**
+
 - Rollout a 500+ tiendas Drive-Thru
 - ROI estimado: $100M+ USD anual
 
@@ -511,6 +534,7 @@ El Data Warehouse Starbucks transforma datos crudos en insights accionables. Pro
 ### Estado Final
 
 El proyecto está 100% completo, validado y listo para:
+
 - Entrega a profesores
 - Evaluación académica
 - Uso como referencia de implementación
@@ -586,6 +610,7 @@ erDiagram
 ### Resumen de Archivos Entregables
 
 **Documentación:**
+
 - ENTREGA_FINAL_TP.md (este documento)
 - plan/01_STAR_SCHEMA_DIAGRAM.md
 - plan/02_CONTEXTO_ORGANIZACIONAL.md
@@ -594,20 +619,23 @@ erDiagram
 - BUSINESS_INSIGHTS.md
 
 **Código:**
+
 - Database/01_SETUP_DATABASE.sql
 - Database/02_CREATE_STAR_SCHEMA.sql
 - Database/04_BUSINESS_QUERIES_STAR.sql
 - Scripts/etl_starbucks.py
 
 **Datos:**
+
 - Database/starbucks_customer_ordering_patterns.csv (100k rows)
 
 **Power BI:**
+
 - Starbucks_PowerBI.pbip (Semantic Model + Report)
 
 ---
 
-**Documento de Entrega Final**  
-**Starbucks Data Warehouse TP**  
-**Status: APROBADO PARA ENTREGA**  
+**Documento de Entrega Final**
+**Starbucks Data Warehouse TP**
+**Status: APROBADO PARA ENTREGA**
 **Fecha: 23 de Marzo, 2026**

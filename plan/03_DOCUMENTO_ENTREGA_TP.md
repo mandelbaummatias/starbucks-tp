@@ -55,6 +55,7 @@ Se construyó un **Data Warehouse analítico (Star Schema)** que responde **4 pr
 ### Resumen Ejecutivo de Contexto
 
 **Starbucks** es la cadena de cafeterías más grande del mundo:
+
 - **31,000+ tiendas** operando en 80+ países
 - **$32B+ USD** en revenue anual
 - **400,000+ empleados** globales
@@ -62,20 +63,20 @@ Se construyó un **Data Warehouse analítico (Star Schema)** que responde **4 pr
 
 #### 4 Canales de Distribución
 
-| Canal | % Volumen (Dataset) | Avg Fulfillment | Características |
-|-------|----------------------|-----------------|-----------------|
-| **Drive-Thru** | 25% | 5.79 min | 🔴 Bottleneck crítico |
-| **Mobile App** | 30% | 4.50 min | Eficiente, alto volumen |
-| **In-Store Cashier** | 20% | 3.22 min | Más rápido |
-| **Kiosk** | 5% | 4.00 min | Automatización futura |
+| Canal                | % Volumen (Dataset) | Avg Fulfillment | Características         |
+| -------------------- | ------------------- | --------------- | ----------------------- |
+| **Drive-Thru**       | 25%                 | 5.79 min        | 🔴 Bottleneck crítico   |
+| **Mobile App**       | 30%                 | 4.50 min        | Eficiente, alto volumen |
+| **In-Store Cashier** | 20%                 | 3.22 min        | Más rápido              |
+| **Kiosk**            | 5%                  | 4.00 min        | Automatización futura   |
 
 #### KPIs de Negocio
 
-| KPI | Target | Realidad | Status |
-|-----|--------|-----------|--------|
+| KPI                             | Target    | Realidad | Status  |
+| ------------------------------- | --------- | -------- | ------- |
 | Fulfillment Time (Morning Rush) | < 4.0 min | 4.56 min | 🔴 -14% |
-| Customer Satisfaction | 4.5+ | 3.66 | 🔴 -18% |
-| Drive-Thru vs Mobile Parity | ±5% | +28.6% | 🔴 -28% |
+| Customer Satisfaction           | 4.5+      | 3.66     | 🔴 -18% |
+| Drive-Thru vs Mobile Parity     | ±5%       | +28.6%   | 🔴 -28% |
 
 ---
 
@@ -84,6 +85,7 @@ Se construyó un **Data Warehouse analítico (Star Schema)** que responde **4 pr
 ### Context Operativo
 
 El modelo de negocio QSR (Quick Service Restaurant) de Starbucks es **economía de volumen + margen comprimido**:
+
 - Márgenes netos: 10-15% de revenue
 - Costo de labor: $10-15 USD/minuto por barista
 - Costo de churn: 2-3% de revenue por 0.1 pts de satisfacción
@@ -91,6 +93,7 @@ El modelo de negocio QSR (Quick Service Restaurant) de Starbucks es **economía 
 ### El Gap
 
 Análisis interno reveló:
+
 - ❌ No hay visibilidad sobre **qué canal específico** causa delays
 - ❌ Incertidumbre sobre si es **complejidad de orden o fricción de proceso**
 - ❌ Falta de **benchmark geográfico** para manager accountability
@@ -99,6 +102,7 @@ Análisis interno reveló:
 ### La Business Case
 
 Una optimización de **-0.5 minutos por orden** en Drive-Thru con 6,000 órdenes/día:
+
 - **Ahorro de labor:** 129 horas/día = 645 horas/semana
 - **Costo evitable:** $9,675/semana × 52 = **$503,100/tienda/año**
 - **Red USA (500 Drive-Thru):** **$251M+ en eficiencia anual**
@@ -113,28 +117,28 @@ Una optimización de **-0.5 minutos por orden** en Drive-Thru con 6,000 órdenes
 
 **100,000 registros** cargados desde CSV `starbucks_customer_ordering_patterns.csv`
 
-| Campo | Tipo | Propósito |
-|-------|------|----------|
-| `order_id` | VARCHAR(20) | PK transaccional |
-| `customer_id` | VARCHAR(20) | Cliente |
-| `order_date` | DATE | Fecha de orden |
-| `order_time` | TIME | Hora de orden |
-| `day_of_week` | VARCHAR(10) | Day name (Mon-Sun) |
-| `order_channel` | VARCHAR(30) | Drive-Thru / Mobile / Kiosk / In-Store |
-| `store_id` | VARCHAR(20) | Ubicación tienda |
-| `store_location_type` | VARCHAR(20) | Urban / Suburban / Rural |
-| `region` | VARCHAR(30) | Northeast / Midwest / Southwest / West |
-| `customer_age_group` | VARCHAR(20) | Age band (18-25, 26-35, etc.) |
-| `customer_gender` | VARCHAR(20) | M / F |
-| `is_rewards_member` | BOOLEAN | Miembro programa lealtad |
-| `cart_size` | INT | Cantidad ítems en orden |
-| `num_customizations` | INT | Número de personalizaciones |
-| `total_spend` | DECIMAL(10,2) | Revenue por orden |
-| `fulfillment_time_min` | DECIMAL(5,2) | ⭐ **KPI Crítico** tiempo cumplimiento |
-| `drink_category` | VARCHAR(40) | Coffee / Tea / Smoothie / etc. |
-| `has_food_item` | BOOLEAN | If comida incluida |
-| `order_ahead` | BOOLEAN | If orden previa (Mobile) |
-| `customer_satisfaction` | INT | 1-5 stars |
+| Campo                   | Tipo          | Propósito                              |
+| ----------------------- | ------------- | -------------------------------------- |
+| `order_id`              | VARCHAR(20)   | PK transaccional                       |
+| `customer_id`           | VARCHAR(20)   | Cliente                                |
+| `order_date`            | DATE          | Fecha de orden                         |
+| `order_time`            | TIME          | Hora de orden                          |
+| `day_of_week`           | VARCHAR(10)   | Day name (Mon-Sun)                     |
+| `order_channel`         | VARCHAR(30)   | Drive-Thru / Mobile / Kiosk / In-Store |
+| `store_id`              | VARCHAR(20)   | Ubicación tienda                       |
+| `store_location_type`   | VARCHAR(20)   | Urban / Suburban / Rural               |
+| `region`                | VARCHAR(30)   | Northeast / Midwest / Southwest / West |
+| `customer_age_group`    | VARCHAR(20)   | Age band (18-25, 26-35, etc.)          |
+| `customer_gender`       | VARCHAR(20)   | M / F                                  |
+| `is_rewards_member`     | BOOLEAN       | Miembro programa lealtad               |
+| `cart_size`             | INT           | Cantidad ítems en orden                |
+| `num_customizations`    | INT           | Número de personalizaciones            |
+| `total_spend`           | DECIMAL(10,2) | Revenue por orden                      |
+| `fulfillment_time_min`  | DECIMAL(5,2)  | ⭐ **KPI Crítico** tiempo cumplimiento |
+| `drink_category`        | VARCHAR(40)   | Coffee / Tea / Smoothie / etc.         |
+| `has_food_item`         | BOOLEAN       | If comida incluida                     |
+| `order_ahead`           | BOOLEAN       | If orden previa (Mobile)               |
+| `customer_satisfaction` | INT           | 1-5 stars                              |
 
 ---
 
@@ -169,25 +173,25 @@ Una optimización de **-0.5 minutos por orden** en Drive-Thru con 6,000 órdenes
 
 ### Tabla de Dimensiones
 
-| Dimensión | Clave Subrogada | Business Key | Atributos | Cardinalidad |
-|-----------|-----------------|------|-----------|---------|
-| **dim_channel** | `channel_id` (SERIAL) | `order_channel` + `is_order_ahead` | 2 atributos | ~6 filas |
-| **dim_store** | `store_id_pk` (SERIAL) | `store_id` | `location_type`, `region` | ~100 filas |
-| **dim_customer** | `customer_id_pk` (SERIAL) | `customer_id` | `age_group`, `gender`, `is_rewards_member` | ~40k filas |
-| **dim_date** | `date_id` (INT YYYYMMDD) | `full_date` | `day_of_week`, `month_num`, `quarter_num`, `year_num` | ~30 filas |
-| **dim_time** | `time_id` (INT 0-23) | `hour_of_day` | `time_period` (Morning Rush / Mid-Day / Afternoon / Evening) | 24 filas |
+| Dimensión        | Clave Subrogada           | Business Key                       | Atributos                                                    | Cardinalidad |
+| ---------------- | ------------------------- | ---------------------------------- | ------------------------------------------------------------ | ------------ |
+| **dim_channel**  | `channel_id` (SERIAL)     | `order_channel` + `is_order_ahead` | 2 atributos                                                  | ~6 filas     |
+| **dim_store**    | `store_id_pk` (SERIAL)    | `store_id`                         | `location_type`, `region`                                    | ~100 filas   |
+| **dim_customer** | `customer_id_pk` (SERIAL) | `customer_id`                      | `age_group`, `gender`, `is_rewards_member`                   | ~40k filas   |
+| **dim_date**     | `date_id` (INT YYYYMMDD)  | `full_date`                        | `day_of_week`, `month_num`, `quarter_num`, `year_num`        | ~30 filas    |
+| **dim_time**     | `time_id` (INT 0-23)      | `hour_of_day`                      | `time_period` (Morning Rush / Mid-Day / Afternoon / Evening) | 24 filas     |
 
 ### Tabla de Hechos
 
 **fact_orders:** 100,000 registros
 
-| Aspecto | Detalles |
-|--------|----------|
-| **Clave Primaria** | `order_id_pk` (SERIAL) |
-| **Foreign Keys** | 5 FKs a todas dimensiones |
-| **Degenerate Dimensions** | `order_id`, `drink_category`, `has_food_item`, `is_order_ahead` |
-| **Medidas** | `cart_size`, `num_customizations`, `total_spend`, **`fulfillment_time_min`** ⭐ , `customer_satisfaction` |
-| **Índices** | 5 índices sobre FKs para aceleración de JOINs |
+| Aspecto                   | Detalles                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Clave Primaria**        | `order_id_pk` (SERIAL)                                                                                    |
+| **Foreign Keys**          | 5 FKs a todas dimensiones                                                                                 |
+| **Degenerate Dimensions** | `order_id`, `drink_category`, `has_food_item`, `is_order_ahead`                                           |
+| **Medidas**               | `cart_size`, `num_customizations`, `total_spend`, **`fulfillment_time_min`** ⭐ , `customer_satisfaction` |
+| **Índices**               | 5 índices sobre FKs para aceleración de JOINs                                                             |
 
 ---
 
@@ -202,7 +206,7 @@ CSV (starbucks_customer_ordering_patterns.csv)
     ↓
 [2] EXTRACT DISTINCT valores → Dimensiones (deduplicación)
     ├─ dim_channel: 6 rows
-    ├─ dim_store: ~100 rows  
+    ├─ dim_store: ~100 rows
     ├─ dim_customer: ~40k rows
     ├─ dim_date: ~30 rows
     └─ dim_time: 24 rows
@@ -218,14 +222,14 @@ CSV (starbucks_customer_ordering_patterns.csv)
 
 ### Mapeo Detallado
 
-| Columna RAW | Dimensión Destino | Lógica | Notas |
-|-------------|-------------------|--------|-------|
-| `order_channel` + `order_ahead` | `dim_channel` | DISTINCT, generar `channel_id` SERIAL | Único constraint sobre (order_channel, is_order_ahead) |
-| `store_id`, `store_location_type`, `region` | `dim_store` | DISTINCT por store_id, generar `store_id_pk` SERIAL | Entrada para análisis geográfico |
-| `customer_id`, `customer_age_group`, `customer_gender`, `is_rewards_member` | `dim_customer` | DISTINCT por customer_id, generar `customer_id_pk` SERIAL | Segmentación demográfica |
-| `order_date` | `dim_date` | EXTRACT DATE parts, generar `date_id` INT YYYYMMDD | Business Key para aritmética temporal |
-| `order_time` (hora) | `dim_time` | EXTRACT HOUR (0-23), clasificar `time_period` | Business Key + clasificación período |
-| Todos campos | `fact_orders` | JOIN a dimensiones por PK/FK, calcular medidas | 100k filas, grano: 1 orden = 1 fila |
+| Columna RAW                                                                 | Dimensión Destino | Lógica                                                    | Notas                                                  |
+| --------------------------------------------------------------------------- | ----------------- | --------------------------------------------------------- | ------------------------------------------------------ |
+| `order_channel` + `order_ahead`                                             | `dim_channel`     | DISTINCT, generar `channel_id` SERIAL                     | Único constraint sobre (order_channel, is_order_ahead) |
+| `store_id`, `store_location_type`, `region`                                 | `dim_store`       | DISTINCT por store_id, generar `store_id_pk` SERIAL       | Entrada para análisis geográfico                       |
+| `customer_id`, `customer_age_group`, `customer_gender`, `is_rewards_member` | `dim_customer`    | DISTINCT por customer_id, generar `customer_id_pk` SERIAL | Segmentación demográfica                               |
+| `order_date`                                                                | `dim_date`        | EXTRACT DATE parts, generar `date_id` INT YYYYMMDD        | Business Key para aritmética temporal                  |
+| `order_time` (hora)                                                         | `dim_time`        | EXTRACT HOUR (0-23), clasificar `time_period`             | Business Key + clasificación período                   |
+| Todos campos                                                                | `fact_orders`     | JOIN a dimensiones por PK/FK, calcular medidas            | 100k filas, grano: 1 orden = 1 fila                    |
 
 ---
 
@@ -233,12 +237,13 @@ CSV (starbucks_customer_ordering_patterns.csv)
 
 ### 1. Star Schema vs. Alternativas
 
-| Decisión | Elección | Alternativa | Justificación |
-|----------|----------|------------|---|
-| **Modelo Analítico** | Star Schema | Snowflake / Vista Plana | ✅ Rendimiento OLAP, claridad BI, estándar académico |
-| **Física vs. Lógica** | Tablas físicas (star schema) | Vistas materializadas | ✅ Control explícito, transparencia para TP |
+| Decisión              | Elección                     | Alternativa             | Justificación                                        |
+| --------------------- | ---------------------------- | ----------------------- | ---------------------------------------------------- |
+| **Modelo Analítico**  | Star Schema                  | Snowflake / Vista Plana | ✅ Rendimiento OLAP, claridad BI, estándar académico |
+| **Física vs. Lógica** | Tablas físicas (star schema) | Vistas materializadas   | ✅ Control explícito, transparencia para TP          |
 
 **Beneficios:**
+
 - ✅ Índices efectivos sobre FKs
 - ✅ JOINs sobre tablas pequeñas (rápido)
 - ✅ Vocabulario de negocio expuesto en dimensiones
@@ -248,10 +253,10 @@ CSV (starbucks_customer_ordering_patterns.csv)
 
 ### 2. ETL con Python
 
-| Decisión | Elección | Alternativa | Justificación |
-|----------|----------|------------|---|
-| **Herramienta ETL** | Python + pandas + SQLAlchemy | SQL-only / dbt / Talend | ✅ Flexibilidad transformación, reutilización, stack coherente |
-| **Estrategia de Carga** | Full Refresh (TRUNCATE + INSERT) | Incremental CDC | ✅ Dataset estático, simplicidad, idempotencia |
+| Decisión                | Elección                         | Alternativa             | Justificación                                                  |
+| ----------------------- | -------------------------------- | ----------------------- | -------------------------------------------------------------- |
+| **Herramienta ETL**     | Python + pandas + SQLAlchemy     | SQL-only / dbt / Talend | ✅ Flexibilidad transformación, reutilización, stack coherente |
+| **Estrategia de Carga** | Full Refresh (TRUNCATE + INSERT) | Incremental CDC         | ✅ Dataset estático, simplicidad, idempotencia                 |
 
 **Script:** [Scripts/etl_starbucks.py](../Scripts/etl_starbucks.py)
 
@@ -259,10 +264,10 @@ CSV (starbucks_customer_ordering_patterns.csv)
 
 ### 3. Claves Subrogadas vs. Naturales
 
-| Decisión | Elección | Justificación |
-|----------|----------|---|
-| **dim_channel, dim_store, dim_customer** | Surrogate Key (SERIAL) | Protección contra cambios Business Key, soportan SCD Type 2 |
-| **dim_date, dim_time** | Business Key (INT YYYYMMDD, INT 0-23) | Auto-descriptivos, aritmética rápida, eliminan lookup |
+| Decisión                                 | Elección                              | Justificación                                               |
+| ---------------------------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| **dim_channel, dim_store, dim_customer** | Surrogate Key (SERIAL)                | Protección contra cambios Business Key, soportan SCD Type 2 |
+| **dim_date, dim_time**                   | Business Key (INT YYYYMMDD, INT 0-23) | Auto-descriptivos, aritmética rápida, eliminan lookup       |
 
 ---
 
@@ -288,12 +293,12 @@ Estos acelerar JOINs en consultas analíticas típicas.
 
 **Respuesta:** **Drive-Thru es el bottleneck crítico**
 
-| Canal | Avg Fulfillment (min) | Diferencia vs. Fast Channel |
-|-------|----------------------|---------------------------|
-| **Drive-Thru** | 5.79 | +80% vs In-Store |
-| Mobile App | 4.50 | +39.8% vs In-Store |
-| Kiosk | 4.00 | +24.2% vs In-Store |
-| In-Store Cashier | 3.22 | ✅ Baseline (fastest) |
+| Canal            | Avg Fulfillment (min) | Diferencia vs. Fast Channel |
+| ---------------- | --------------------- | --------------------------- |
+| **Drive-Thru**   | 5.79                  | +80% vs In-Store            |
+| Mobile App       | 4.50                  | +39.8% vs In-Store          |
+| Kiosk            | 4.00                  | +24.2% vs In-Store          |
+| In-Store Cashier | 3.22                  | ✅ Baseline (fastest)       |
 
 **Insight:** Drive-Thru tarda casi 6 minutos vs. 3.22 minutos en In-Store. Gap de **2.57 minutos por orden** = **25,700 minutos/día** en ineficiencia.
 
@@ -303,12 +308,12 @@ Estos acelerar JOINs en consultas analíticas típicas.
 
 **Respuesta:** **NO - Correlación ≈ 0**
 
-| Canal | Avg Customizations | Correlation (Complexity vs Delay) | Status |
-|-------|-------------------|----------------------------------|--------|
-| Drive-Thru | 1.30 | 0.0047 | ✅ Ninguno |
-| Mobile App | 2.51 | -0.0102 | ✅ Ninguno (incluso negativo!) |
-| Kiosk | 1.29 | -0.0152 | ✅ Ninguno |
-| In-Store | 1.29 | 0.0230 | ✅ Débil positivo |
+| Canal      | Avg Customizations | Correlation (Complexity vs Delay) | Status                         |
+| ---------- | ------------------ | --------------------------------- | ------------------------------ |
+| Drive-Thru | 1.30               | 0.0047                            | ✅ Ninguno                     |
+| Mobile App | 2.51               | -0.0102                           | ✅ Ninguno (incluso negativo!) |
+| Kiosk      | 1.29               | -0.0152                           | ✅ Ninguno                     |
+| In-Store   | 1.29               | 0.0230                            | ✅ Débil positivo              |
 
 **Insight:** Mobile App maneja **casi 2x customizations** (2.51 vs 1.30) pero es **24% más rápido** que Drive-Thru. **La complejidad NO es el problema.**
 
@@ -322,14 +327,14 @@ Estos acelerar JOINs en consultas analíticas típicas.
 
 Top 5 Slowest Segments:
 
-| Location Type | Region | Avg Fulfillment | Status |
-|--------------|--------|-----------------|--------|
-| Rural | Northeast | 4.67 min | 🟡 Slowest |
-| Suburban | Southwest | 4.59 min | 🟡 |
-| Urban | West | 4.59 min | 🟡 |
-| Rural | Midwest | 4.58 min | 🟡 |
-| Rural | Southwest | 4.55 min | 🟡 |
-| **AVERAGE** | — | **4.56 min** | — |
+| Location Type | Region    | Avg Fulfillment | Status     |
+| ------------- | --------- | --------------- | ---------- |
+| Rural         | Northeast | 4.67 min        | 🟡 Slowest |
+| Suburban      | Southwest | 4.59 min        | 🟡         |
+| Urban         | West      | 4.59 min        | 🟡         |
+| Rural         | Midwest   | 4.58 min        | 🟡         |
+| Rural         | Southwest | 4.55 min        | 🟡         |
+| **AVERAGE**   | —         | **4.56 min**    | —          |
 
 **Insight:** La varianza es **0.15 minutos** (0.1%). Los procedimientos operativos están **excelentemente estandarizados** a nivel nacional.
 
@@ -341,15 +346,15 @@ Top 5 Slowest Segments:
 
 **Respuesta:** **Utter Consistency - 4.53-4.56 min todo la semana**
 
-| Day | Avg Fulfillment | Total Orders |
-|-----|-----------------|--------------|
-| Thu | 4.56 min | 14,214 |
-| Sat | 4.55 min | 14,443 |
-| Tue | 4.55 min | 14,385 |
-| Fri | 4.55 min | 14,277 |
-| Mon | 4.54 min | 14,386 |
-| Sun | 4.53 min | 14,175 |
-| Wed | 4.53 min | 14,120 |
+| Day          | Avg Fulfillment     | Total Orders |
+| ------------ | ------------------- | ------------ |
+| Thu          | 4.56 min            | 14,214       |
+| Sat          | 4.55 min            | 14,443       |
+| Tue          | 4.55 min            | 14,385       |
+| Fri          | 4.55 min            | 14,277       |
+| Mon          | 4.54 min            | 14,386       |
+| Sun          | 4.53 min            | 14,175       |
+| Wed          | 4.53 min            | 14,120       |
 | **Variance** | **0.03 min (0.7%)** | ±160 órdenes |
 
 **Insight:** Demanda y delays son **perfectamente planos** toda semana. El bottleneck es **systemic, no temporal**.
@@ -381,6 +386,7 @@ psql -U postgres -l | grep starbucks_dw_raw
 ```
 
 **Output Esperado:**
+
 - ✅ Base de datos `starbucks_dw_raw` creada
 - ✅ Schema `starbucks` creado
 
@@ -395,6 +401,7 @@ psql -U postgres -d starbucks_dw_raw -f Database/setup_starbucks.sql
 ```
 
 **Validar:**
+
 ```bash
 psql -U postgres -d starbucks_dw_raw -c "SELECT COUNT(*) FROM starbucks.raw_orders;"
 # Output: 100000
@@ -411,10 +418,11 @@ psql -U postgres -d starbucks_dw_raw -f Database/02_CREATE_STAR_SCHEMA.sql
 ```
 
 **Validar:**
+
 ```bash
 psql -U postgres -d starbucks_dw_raw -c "
-  SELECT table_name FROM information_schema.tables 
-  WHERE table_schema='star' 
+  SELECT table_name FROM information_schema.tables
+  WHERE table_schema='star'
   ORDER BY table_name;
 "
 # Output:
@@ -438,6 +446,7 @@ python etl_starbucks.py
 ```
 
 **Log Output Esperado:**
+
 ```
 [ETL START] Loading raw_orders...
 [ETL] Extracted 6 unique channels
@@ -501,14 +510,14 @@ Si deseas visualizar en Power BI:
 
 ✅ **SÍ - 100% completado**
 
-| Requerimiento TP | Status | Evidencia |
-|------------------|--------|-----------|
-| **Star Schema implementado** | ✅ | 6 tablas, 100k filas, FK constraints en place |
-| **4 Business Questions contestadas** | ✅ | BUSINESS_INSIGHTS.md + SQL en 04_BUSINESS_QUERIES_STAR.sql |
-| **ETL robusto (Python)** | ✅ | Scripts/etl_starbucks.py con validación completa |
-| **Documentación comprensiva** | ✅ | 6+ documentos (README, schema diagram, contexto, decisiones) |
-| **Power BI modelos** | ✅ | TMDL + 4 visuals (si se ejecutó inject_measures.py) |
-| **Integridad de datos** | ✅ | FK constraints, índices, NULL checks, COUNT validations |
+| Requerimiento TP                     | Status | Evidencia                                                    |
+| ------------------------------------ | ------ | ------------------------------------------------------------ |
+| **Star Schema implementado**         | ✅     | 6 tablas, 100k filas, FK constraints en place                |
+| **4 Business Questions contestadas** | ✅     | BUSINESS_INSIGHTS.md + SQL en 04_BUSINESS_QUERIES_STAR.sql   |
+| **ETL robusto (Python)**             | ✅     | Scripts/etl_starbucks.py con validación completa             |
+| **Documentación comprensiva**        | ✅     | 6+ documentos (README, schema diagram, contexto, decisiones) |
+| **Power BI modelos**                 | ✅     | TMDL + 4 visuals (si se ejecutó inject_measures.py)          |
+| **Integridad de datos**              | ✅     | FK constraints, índices, NULL checks, COUNT validations      |
 
 ---
 
@@ -516,13 +525,15 @@ Si deseas visualizar en Power BI:
 
 **Identificado:** El Drive-Thru es el bottleneck operativo (no es complejidad de orden)
 
-**Accionable:** 
+**Accionable:**
+
 - Auditoría inmediata de workflow Drive-Thru
 - Optimizaciones de proceso (pago, UI, handoff) > entrenamiento barista
 - Estimar: -0.5 minutos por orden = $50k/año por tienda
 
 **ROI Medible:**
-- Red USA (500 Drive-Thru): **$25M+ anual** en eficiencia potencial  
+
+- Red USA (500 Drive-Thru): **$25M+ anual** en eficiencia potencial
 - Implementación: CMS (pequeña inversión en pago móvil / interface rediseño)
 - Break even: <3 meses
 
@@ -531,12 +542,14 @@ Si deseas visualizar en Power BI:
 ### Entregables Finales
 
 **Código y Datos:**
+
 - ✅ Star Schema (6 tablas, 100k filas)
 - ✅ ETL Python (idempotente, validado)
 - ✅ SQL queries (4 business questions)
 - ✅ Power BI PBIP (si aplica)
 
 **Documentación:**
+
 - ✅ [plan/01_STAR_SCHEMA_DIAGRAM.md](../plan/01_STAR_SCHEMA_DIAGRAM.md) — Diagrama Mermaid ER
 - ✅ [plan/02_CONTEXTO_ORGANIZACIONAL.md](../plan/02_CONTEXTO_ORGANIZACIONAL.md) — Contexto negocio Starbucks
 - ✅ [Decisiones_de_diseno.md](../Decisiones_de_diseno.md) — Justificación técnicas
@@ -565,9 +578,9 @@ Este proyecto demuestra la aplicación de **best practices en Data Warehousing**
 
 ---
 
-**Documento de Entrega Oficial - Starbucks TP**  
-**Preparado Por:** Equipo TP  
-**Fecha:** 23 de Marzo, 2026  
+**Documento de Entrega Oficial - Starbucks TP**
+**Preparado Por:** Equipo TP
+**Fecha:** 23 de Marzo, 2026
 **Estado:** ✅ **LISTO PARA ENTREGA**
 
 ---

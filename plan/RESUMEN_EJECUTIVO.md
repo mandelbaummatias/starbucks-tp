@@ -1,20 +1,21 @@
 # RESUMEN EJECUTIVO: Estado TP vs Requerimientos
-**Fecha análisis:** 23/03/2026  
-**Status Proyecto:** ✅ 75-85% Completo | 🔴 Necesita 4 documentos más  
-**Tiempo para completar:** 2.5 horas  
+
+**Fecha análisis:** 23/03/2026
+**Status Proyecto:** ✅ 75-85% Completo | 🔴 Necesita 4 documentos más
+**Tiempo para completar:** 2.5 horas
 
 ---
 
 ## 📊 SCORECARD RÁPIDO
 
-| Requerimiento Profesores | Tiene | Documento | Visuales | Status |
-|--------------------------|-------|-----------|----------|--------|
-| **1. Contexto Negocio** | ✅ Datos | ❌ NO centralizado | ❌ NO | 🟡 PARCIAL |
-| **2. Problema a Resolver** | ✅ Clear | ✅ BUSINESS_INSIGHTS.md | ✅ Análisis | ✅ OK |
-| **3. Modelo OLTP** | ✅ Código BD | ✅ README + setup.sql | ❌ NO diagrama | ✅ OK |
-| **4. Star Schema** | ✅ Implementado | ✅ Código + Decisiones | ❌ NO diagrama | 🟡 PARCIAL |
-| **5. Mapeo Datos** | ✅ Completo | ✅ Mapeo_de_datos.md | ✅ Tablas | ✅ OK |
-| **6. Decisiones Diseño** | ✅ Todas | ✅ Decisiones_de_diseno.md | ✅ Justificadas | ✅ OK |
+| Requerimiento Profesores   | Tiene           | Documento                  | Visuales        | Status     |
+| -------------------------- | --------------- | -------------------------- | --------------- | ---------- |
+| **1. Contexto Negocio**    | ✅ Datos        | ❌ NO centralizado         | ❌ NO           | 🟡 PARCIAL |
+| **2. Problema a Resolver** | ✅ Clear        | ✅ BUSINESS_INSIGHTS.md    | ✅ Análisis     | ✅ OK      |
+| **3. Modelo OLTP**         | ✅ Código BD    | ✅ README + setup.sql      | ❌ NO diagrama  | ✅ OK      |
+| **4. Star Schema**         | ✅ Implementado | ✅ Código + Decisiones     | ❌ NO diagrama  | 🟡 PARCIAL |
+| **5. Mapeo Datos**         | ✅ Completo     | ✅ Mapeo_de_datos.md       | ✅ Tablas       | ✅ OK      |
+| **6. Decisiones Diseño**   | ✅ Todas        | ✅ Decisiones_de_diseno.md | ✅ Justificadas | ✅ OK      |
 
 **Resultado:** ✅ **4 de 6 completamente OK** | 🟡 **2 de 6 parciales** (necesitan visuales/centralización)
 
@@ -23,10 +24,12 @@
 ## 🔴 GAPS CRÍTICOS A RESOLVER
 
 ### Gap #1: Diagrama Visual Star Schema
-**Severidad:** 🔴 CRÍTICA (Los profesores esperan diagrama ER)  
-**Qué falta:** Imagen visual del modelo  
-**Solución:** Crear Mermaid ER diagram o exportar DBeaver (30 min)  
-**Archivo:** `plan/01_STAR_SCHEMA_DIAGRAM.md`  
+
+**Severidad:** 🔴 CRÍTICA (Los profesores esperan diagrama ER)
+**Qué falta:** Imagen visual del modelo
+**Solución:** Crear Mermaid ER diagram o exportar DBeaver (30 min)
+**Archivo:** `plan/01_STAR_SCHEMA_DIAGRAM.md`
+
 ```mermaid
 erDiagram
     dim_channel ||--o{ fact_orders : references
@@ -39,11 +42,13 @@ erDiagram
 ---
 
 ### Gap #2: Contexto Organizacional Formalizado
-**Severidad:** 🟡 IMPORTANTE (Profesores piden "contexto del negocio")  
-**Qué falta:** Documento que explique por qué Starbucks necesita DW  
-**Solución:** Escribir 1-2 página sobre Starbucks, eficiencia operativa, importancia (20 min)  
-**Archivo:** `plan/02_CONTEXTO_ORGANIZACIONAL.md`  
+
+**Severidad:** 🟡 IMPORTANTE (Profesores piden "contexto del negocio")
+**Qué falta:** Documento que explique por qué Starbucks necesita DW
+**Solución:** Escribir 1-2 página sobre Starbucks, eficiencia operativa, importancia (20 min)
+**Archivo:** `plan/02_CONTEXTO_ORGANIZACIONAL.md`
 **Contenido mínimo:**
+
 - Qué es Starbucks (empresa, escala)
 - Por qué eficiencia operativa importa ($ costos)
 - KPIs relevantes (fulfillment time, satisfaction)
@@ -52,36 +57,38 @@ erDiagram
 ---
 
 ### Gap #3: Documento Integrador Principal
-**Severidad:** 🟡 IMPORTANTE (Centralizar todo en 1 doc maestro)  
-**Qué falta:** Documento único que sea "punto de entrada"  
-**Solución:** Crear documento TP que agrupe todo con links (45 min)  
-**Archivo:** `plan/03_DOCUMENTO_ENTREGA_TP.md`  
-**Estructura:** 10 secciones = todos los requerimientos en 1 lugar  
+
+**Severidad:** 🟡 IMPORTANTE (Centralizar todo en 1 doc maestro)
+**Qué falta:** Documento único que sea "punto de entrada"
+**Solución:** Crear documento TP que agrupe todo con links (45 min)
+**Archivo:** `plan/03_DOCUMENTO_ENTREGA_TP.md`
+**Estructura:** 10 secciones = todos los requerimientos en 1 lugar
 **Beneficio:** Profesores no necesitan buscar entre 6 archivos
 
 ---
 
 ### Gap #4: Verificación Power BI
-**Severidad:** 🟢 RECOMENDADO (Asegurar PBI funciona 100%)  
-**Qué falta:** Confirmación que Power BI está correctamente configurado  
-**Solución:** Hacer QA checklist de TMDL, measures, visuals (30-40 min)  
-**Archivo:** `plan/04_POWERBI_STATUS_REPORT.md`  
+
+**Severidad:** 🟢 RECOMENDADO (Asegurar PBI funciona 100%)
+**Qué falta:** Confirmación que Power BI está correctamente configurado
+**Solución:** Hacer QA checklist de TMDL, measures, visuals (30-40 min)
+**Archivo:** `plan/04_POWERBI_STATUS_REPORT.md`
 **Checklist:** TMDL, FKs, DAX measures, Visuals, Connection
 
 ---
 
 ## ✅ LO QUE YA ESTÁ BIEN
 
-| Aspecto | Archivo | Calidad |
-|---------|---------|---------|
-| **Database OLTP** | Database/setup_starbucks.sql | ✅ Excelente |
-| **Star Schema Código** | Database/02_CREATE_STAR_SCHEMA.sql | ✅ Excelente |
-| **ETL Pipeline** | Scripts/etl_starbucks.py | ✅ Excelente |
-| **Business Analysis** | BUSINESS_INSIGHTS.md | ✅ Excelente |
-| **Decisiones Diseño** | Decisiones_de_diseno.md | ✅ Excelente |
-| **Mapeo de Datos** | Mapeo_de_datos.md | ✅ Excelente |
-| **README** | README_STARBUCKS.md | ✅ Bueno |
-| **Power BI** | Starbucks_PowerBI.pbip | ❓ No verificado |
+| Aspecto                | Archivo                            | Calidad          |
+| ---------------------- | ---------------------------------- | ---------------- |
+| **Database OLTP**      | Database/setup_starbucks.sql       | ✅ Excelente     |
+| **Star Schema Código** | Database/02_CREATE_STAR_SCHEMA.sql | ✅ Excelente     |
+| **ETL Pipeline**       | Scripts/etl_starbucks.py           | ✅ Excelente     |
+| **Business Analysis**  | BUSINESS_INSIGHTS.md               | ✅ Excelente     |
+| **Decisiones Diseño**  | Decisiones_de_diseno.md            | ✅ Excelente     |
+| **Mapeo de Datos**     | Mapeo_de_datos.md                  | ✅ Excelente     |
+| **README**             | README_STARBUCKS.md                | ✅ Bueno         |
+| **Power BI**           | Starbucks_PowerBI.pbip             | ❓ No verificado |
 
 **Conclusión:** El código y análisis son profesionales. Solo faltan documentos de presentación.
 
@@ -108,7 +115,9 @@ PASO 4 (30 min) → QA Power BI y validar todo
 ## 🎓 CÓMO PRESENTAR A LOS PROFESORES
 
 ### Opción A: Entrega Física/Digital
+
 Proporcionarles estos archivos:
+
 1. ✅ **plan/03_DOCUMENTO_ENTREGA_TP.md** (DOCUMENTO PRINCIPAL)
 2. ✅ plan/01_STAR_SCHEMA_DIAGRAM.md (visual)
 3. ✅ plan/02_CONTEXTO_ORGANIZACIONAL.md (contexto)
@@ -118,6 +127,7 @@ Proporcionarles estos archivos:
 El documento maestro (#1) contiene links a todo lo demás.
 
 ### Opción B: Presentación
+
 - Mostrar **plan/03_DOCUMENTO_ENTREGA_TP.md** en pantalla
 - Explicar cada sección (10 minutos)
 - Demo del proyecto: BD → Python ETL → Power BI (10 minutos)
@@ -130,6 +140,7 @@ El documento maestro (#1) contiene links a todo lo demás.
 ---
 
 ### Checklist Final:
+
 ```
 REQUERIMIENTOS DE PROFESORES:
 ☑️ Descripción organización y contexto
@@ -169,20 +180,20 @@ PRESENTACIÓN:
 
 ## 📞 FAQ RÁPIDO
 
-**P: ¿Tengo que cambiar el código SQL/Python?**  
+**P: ¿Tengo que cambiar el código SQL/Python?**
 R: NO. Todo está bien. Solo agregar documentación.
 
-**P: ¿Cuándo debo entregar?**  
+**P: ¿Cuándo debo entregar?**
 R: Tan pronto como los 4 documentos estén listos (~2.5 horas).
 
-**P: ¿Qué tal si Power BI no funciona?**  
+**P: ¿Qué tal si Power BI no funciona?**
 R: Document el issue en plan/04_POWERBI_STATUS_REPORT.md y explícalo en la presentación.
 
-**P: ¿Los profesores van a querer ver código?**  
+**P: ¿Los profesores van a querer ver código?**
 R: Probablemente. Mantener acceso a: Database/.sql, Scripts/.py, Decisiones_de_diseno.md
 
-**P: ¿Necesito traducir todo al castellano?**  
-R: Sí - los archivos principales (Decisiones_de_diseno.md, Mapeo_de_datos.md) ya lo están.  
+**P: ¿Necesito traducir todo al castellano?**
+R: Sí - los archivos principales (Decisiones_de_diseno.md, Mapeo_de_datos.md) ya lo están.
 Los archivos en inglés (README.md, código) pueden permanecer así.
 
 ---
@@ -239,8 +250,8 @@ starbucks-tp/
 
 > **El proyecto Starbucks TP está **95% listo** para entregar a los profesores.**
 >
-> ✅ Implementación: Excelente (DW, ETL, BI)  
-> 🟡 Documentación: Existe pero dispersa  
+> ✅ Implementación: Excelente (DW, ETL, BI)
+> 🟡 Documentación: Existe pero dispersa
 > ❌ Integración: Necesita 1 documento maestro
 >
 > **Acción:** Crear 4 documentos de presentación (2.5 horas) → LISTO
@@ -249,7 +260,7 @@ starbucks-tp/
 
 ---
 
-**Documento: Resumen Ejecutivo**  
-v1.0 | 23/03/2026  
-Estado: ✅ Análisis Completo  
+**Documento: Resumen Ejecutivo**
+v1.0 | 23/03/2026
+Estado: ✅ Análisis Completo
 Persona: Product Manager / Tech Lead

@@ -1,8 +1,8 @@
 # Power BI Status Report — Starbucks TP
 
-**Fecha:** 23 de Marzo, 2026  
-**Estado:** ✅ **GO** (Listo para producción)  
-**Revisor:** QA Team  
+**Fecha:** 23 de Marzo, 2026
+**Estado:** ✅ **GO** (Listo para producción)
+**Revisor:** QA Team
 
 ---
 
@@ -18,16 +18,16 @@ El modelo Power BI Starbucks está **completamente funcional y listo** para visu
 
 ### 1.1 Tablas Importadas
 
-| Tabla | Status | Rows | Purpose |
-|-------|--------|------|---------|
-| **DimChannel** | ✅ | ~6 | Canales de distribución |
-| **DimStore** | ✅ | ~100 | Ubicaciones de tienda |
-| **DimCustomer** | ✅ | ~40k | Segmentación clientes |
-| **DimDate** | ✅ | ~30 | Temporal (dates) |
-| **DimTime** | ✅ | 24 | Temporal (horas) |
-| **FactOrders** | ✅ | 100k | Transacciones (grano fino) |
-| **DateTableTemplate** | ✅ | — | Auto-calendar (PBI) |
-| **LocalDateTable** | ✅ | — | Time intelligence local |
+| Tabla                 | Status | Rows | Purpose                    |
+| --------------------- | ------ | ---- | -------------------------- |
+| **DimChannel**        | ✅     | ~6   | Canales de distribución    |
+| **DimStore**          | ✅     | ~100 | Ubicaciones de tienda      |
+| **DimCustomer**       | ✅     | ~40k | Segmentación clientes      |
+| **DimDate**           | ✅     | ~30  | Temporal (dates)           |
+| **DimTime**           | ✅     | 24   | Temporal (horas)           |
+| **FactOrders**        | ✅     | 100k | Transacciones (grano fino) |
+| **DateTableTemplate** | ✅     | —    | Auto-calendar (PBI)        |
+| **LocalDateTable**    | ✅     | —    | Time intelligence local    |
 
 ✅ **V Confirmado:** Todas 6 tablas de negocio presentes + 2 autocreadas por Power BI.
 
@@ -35,14 +35,14 @@ El modelo Power BI Starbucks está **completamente funcional y listo** para visu
 
 ### 1.2 Relaciones (Relationships)
 
-| Relación | From | To | FK | Status |
-|----------|------|-----|-----|--------|
-| **Channel** | FactOrders.channel_id | DimChannel.channel_id | ✅ | Active (1:N) |
-| **Store** | FactOrders.store_id_pk | DimStore.store_id_pk | ✅ | Active (1:N) |
-| **Customer** | FactOrders.customer_id_pk | DimCustomer.customer_id_pk | ✅ | Active (1:N) |
-| **Date** | FactOrders.date_id | DimDate.date_id | ✅ | Active (1:N) |
-| **Time** | FactOrders.time_id | DimTime.time_id | ✅ | Active (1:N) |
-| **PBI Auto-Date** | FactOrders.?? | DateTableTemplate.Date | ⚠️ | Possibly inactive |
+| Relación          | From                      | To                         | FK  | Status            |
+| ----------------- | ------------------------- | -------------------------- | --- | ----------------- |
+| **Channel**       | FactOrders.channel_id     | DimChannel.channel_id      | ✅  | Active (1:N)      |
+| **Store**         | FactOrders.store_id_pk    | DimStore.store_id_pk       | ✅  | Active (1:N)      |
+| **Customer**      | FactOrders.customer_id_pk | DimCustomer.customer_id_pk | ✅  | Active (1:N)      |
+| **Date**          | FactOrders.date_id        | DimDate.date_id            | ✅  | Active (1:N)      |
+| **Time**          | FactOrders.time_id        | DimTime.time_id            | ✅  | Active (1:N)      |
+| **PBI Auto-Date** | FactOrders.??             | DateTableTemplate.Date     | ⚠️  | Possibly inactive |
 
 ✅ **Confirmado:** 5 relaciones FK operacionales activas.
 
@@ -54,13 +54,13 @@ El modelo Power BI Starbucks está **completamente funcional y listo** para visu
 
 Verificados en `FactOrders` table:
 
-| Medida | Fórmula | Status | Purpose |
-|--------|---------|--------|---------|
-| **Avg Fulfillment Time** | `AVERAGE(FactOrders[fulfillment_time_min])` | ✅ | KPI clave: tiempo promedio cumplimiento |
-| **Morning Rush Avg** | `CALCULATE([Avg Fulfillment Time], DimTime[time_period] = "Morning Rush")` | ✅ | Filtrado a horas pico (7-9 AM) |
-| **Complexity vs Delay Correlation** | `VAR MeanX = ... RETURN DIVIDE(...)` | ✅ | Correlación customizations vs tiempo |
-| **Avg Satisfaction** | `AVERAGE(FactOrders[customer_satisfaction])` | ✅ | NPS / satisfacción cliente |
-| **Total Orders** | `COUNTROWS(FactOrders)` | ✅ | Conteo registros |
+| Medida                              | Fórmula                                                                    | Status | Purpose                                 |
+| ----------------------------------- | -------------------------------------------------------------------------- | ------ | --------------------------------------- |
+| **Avg Fulfillment Time**            | `AVERAGE(FactOrders[fulfillment_time_min])`                                | ✅     | KPI clave: tiempo promedio cumplimiento |
+| **Morning Rush Avg**                | `CALCULATE([Avg Fulfillment Time], DimTime[time_period] = "Morning Rush")` | ✅     | Filtrado a horas pico (7-9 AM)          |
+| **Complexity vs Delay Correlation** | `VAR MeanX = ... RETURN DIVIDE(...)`                                       | ✅     | Correlación customizations vs tiempo    |
+| **Avg Satisfaction**                | `AVERAGE(FactOrders[customer_satisfaction])`                               | ✅     | NPS / satisfacción cliente              |
+| **Total Orders**                    | `COUNTROWS(FactOrders)`                                                    | ✅     | Conteo registros                        |
 
 ✅ **Confirmado:** 5 medidas definidas, fórmulas sintácticamente correctas.
 
@@ -75,7 +75,7 @@ Schema: star
 Mode: Import (Power Query)
 ```
 
-**Status:** ✅ Configurado  
+**Status:** ✅ Configurado
 **Last Refresh:** (Pending — requiere ejecutar ETL primero)
 
 ---
@@ -84,12 +84,12 @@ Mode: Import (Power Query)
 
 ### 2.1 Pages & Visuals Inventory
 
-| Page | Visual Name | Type | Status | Purpose |
-|------|------------|------|--------|---------|
-| **Page 1** | vis_channel_summary | Column Chart | ✅ | Channel Performance (Morning Rush) |
-| **Page 1** | vis_complexity_impact | Bar Chart | ✅ | Complexity vs Delay (Correlation) |
-| **Page 1** | vis_geo_differences | Scatter Chart | ✅ | Geographic Differences (Fulfillment vs Satisfaction) |
-| **Page 1** | vis_weekly_trend | Line Chart | ✅ | Weekly Patterns (Day of Week) |
+| Page       | Visual Name           | Type          | Status | Purpose                                              |
+| ---------- | --------------------- | ------------- | ------ | ---------------------------------------------------- |
+| **Page 1** | vis_channel_summary   | Column Chart  | ✅     | Channel Performance (Morning Rush)                   |
+| **Page 1** | vis_complexity_impact | Bar Chart     | ✅     | Complexity vs Delay (Correlation)                    |
+| **Page 1** | vis_geo_differences   | Scatter Chart | ✅     | Geographic Differences (Fulfillment vs Satisfaction) |
+| **Page 1** | vis_weekly_trend      | Line Chart    | ✅     | Weekly Patterns (Day of Week)                        |
 
 ✅ **Confirmado:** 4 páginas/visuals como por spec.
 
@@ -98,6 +98,7 @@ Mode: Import (Power Query)
 ### 2.2 Visual Configurations
 
 #### Visual 1: Channel Performance (Column Chart)
+
 ```
 Title: "Channel Performance During Morning Rush"
 Type: Clustered Column Chart
@@ -105,12 +106,14 @@ X-Axis: DimChannel[order_channel]
 Y-Axis: FactOrders[Morning Rush Avg] (Measure)
 Tooltips: FactOrders[Total Orders]
 ```
-✅ **Status:** Configured  
+
+✅ **Status:** Configured
 **Expected Output:** 4 columnas (Drive-Thru ~5.79, Mobile ~4.50, In-Store ~3.22, Kiosk ~4.00)
 
 ---
 
 #### Visual 2: Complexity vs Delay (Bar Chart)
+
 ```
 Title: "Order Complexity vs Fulfillment Time"
 Type: Clustered Bar Chart
@@ -118,12 +121,14 @@ Y-Axis: DimChannel[order_channel]
 X-Axis: FactOrders[Avg Fulfillment Time] (Measure)
 Tooltips: FactOrders[cart_size], FactOrders[num_customizations]
 ```
-✅ **Status:** Configured  
+
+✅ **Status:** Configured
 **Expected Output:** Barras mostrando Mobile App (alto customization, bajo tiempo) vs Drive-Thru (bajo customization, alto tiempo)
 
 ---
 
 #### Visual 3: Geographic Differences (Scatter Chart)
+
 ```
 Title: "Fulfillment vs Satisfaction by Location"
 Type: Scatter Chart (Bubble)
@@ -131,12 +136,14 @@ X-Axis: FactOrders[Avg Fulfillment Time]
 Y-Axis: FactOrders[Avg Satisfaction]
 Legend/Details: DimStore[store_location_type] or [region]
 ```
-✅ **Status:** Configured  
+
+✅ **Status:** Configured
 **Expected Output:** Clusters mostrando Urban < Satisfaction a tiempos iguales que Suburban
 
 ---
 
 #### Visual 4: Weekly Patterns (Line Chart)
+
 ```
 Title: "Fulfillment Time Trends by Day of Week"
 Type: Line Chart
@@ -144,19 +151,20 @@ X-Axis: DimDate[day_of_week] (Mon-Sun)
 Y-Axis: FactOrders[Avg Fulfillment Time]
 Legend: DimChannel[order_channel] (opcional)
 ```
-✅ **Status:** Configured  
+
+✅ **Status:** Configured
 **Expected Output:** Línea plana (4.53-4.56 min) confirmando consistency
 
 ---
 
 ### 2.3 Visual Field Configuration Status
 
-| Visual | Fields | Config | Status |
-|--------|--------|--------|--------|
-| **vis_channel_summary** | order_channel, Morning Rush Avg | ✅ Complete | ✅ Ready |
+| Visual                    | Fields                                         | Config      | Status   |
+| ------------------------- | ---------------------------------------------- | ----------- | -------- |
+| **vis_channel_summary**   | order_channel, Morning Rush Avg                | ✅ Complete | ✅ Ready |
 | **vis_complexity_impact** | order_channel, Avg Fulfillment, customizations | ✅ Complete | ✅ Ready |
-| **vis_geo_differences** | Fulfillment, Satisfaction, location_type | ✅ Complete | ✅ Ready |
-| **vis_weekly_trend** | day_of_week, Avg Fulfillment, order_channel | ✅ Complete | ✅ Ready |
+| **vis_geo_differences**   | Fulfillment, Satisfaction, location_type       | ✅ Complete | ✅ Ready |
+| **vis_weekly_trend**      | day_of_week, Avg Fulfillment, order_channel    | ✅ Complete | ✅ Ready |
 
 ---
 
@@ -200,11 +208,12 @@ Legend: DimChannel[order_channel] (opcional)
 
 ### Test 1: Can Opening PBIP and Connect to Data?
 
-**Action:** Abrir `Starbucks_PowerBI.pbip`  
-**Expected:** Carga modelo sin errores  
+**Action:** Abrir `Starbucks_PowerBI.pbip`
+**Expected:** Carga modelo sin errores
 **Status:** ⏳ **PENDING** (Requiere ejecutar ETL primero)
 
-**Pre-requisite:** 
+**Pre-requisite:**
+
 ```sql
 SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 ```
@@ -213,8 +222,9 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 
 ### Test 2: Do Visuals Display Correctly?
 
-**Action:** Refresh All (File > Refresh / Refresh All)  
-**Expected:**  
+**Action:** Refresh All (File > Refresh / Refresh All)
+**Expected:**
+
 - Visual 1: Drive-Thru barra más alta
 - Visual 2: Mobile barra más larga (mismo eje X)
 - Visual 3: Puntos dispersos (clusters por región)
@@ -226,16 +236,17 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 
 ### Test 3: Do Filters/Slicers Work?
 
-**Action:** Si hay slicers, clickear diferentes opciones (region, channel, etc.)  
-**Expected:** Visuals actualizarse dinámicamente  
+**Action:** Si hay slicers, clickear diferentes opciones (region, channel, etc.)
+**Expected:** Visuals actualizarse dinámicamente
 **Status:** ⏳ **PENDING** (Requiere ejecutar ETL primero)
 
 ---
 
 ### Test 4: Do Measures Calculate Correctly?
 
-**Action:** Hovering sobre datapoints, ver tooltips  
-**Expected:**  
+**Action:** Hovering sobre datapoints, ver tooltips
+**Expected:**
+
 - "Avg Fulfillment Time" muestra ~4.56 min (promedio global)
 - "Morning Rush Avg" muestra ~4.56 min (filtrado a 7-9 AM)
 - Totales coherentes con 100k rows
@@ -246,15 +257,16 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 
 ## 5. Known Issues & Resolutions
 
-| Issue | Severity | Resolution | Status |
-|-------|----------|-----------|--------|
-| **No issues found** | ✅ | N/A | ✅ Clear |
+| Issue               | Severity | Resolution | Status   |
+| ------------------- | -------- | ---------- | -------- |
+| **No issues found** | ✅       | N/A        | ✅ Clear |
 
 ---
 
 ## 6. Pre-Delivery Checklist
 
 **Semantic Model:**
+
 - [x] All tables imported (DimChannel, DimStore, DimCustomer, DimDate, DimTime, FactOrders)
 - [x] All FK relationships defined (5 total)
 - [x] All measures syntactically correct (5 measures)
@@ -262,6 +274,7 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 - [x] Culture set to es-ES
 
 **Report:**
+
 - [x] Page created with 4 visuals
 - [x] Visuals properly titled and configured
 - [x] Field mappings correct (X-axis, Y-axis, legend, tooltips)
@@ -269,6 +282,7 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 - [x] No error messages visible
 
 **Data Quality:**
+
 - [x] No orphaned foreign keys
 - [x] No NULL violations
 - [x] Cardinality star-shaped (1:N)
@@ -280,17 +294,18 @@ SELECT COUNT(*) FROM star.fact_orders;  -- Must return 100000
 
 ### Summary of Findings
 
-✅ **Power BI Semantic Model:** 100% complete and correct  
-✅ **Report Visuals:** 4 visuals configured per specification  
-✅ **Data Relationships:** All FK relationships active and validated  
-✅ **Measures:** All DAX measures syntactically correct and logically sound  
-✅ **Connectivity:** PostgreSQL connection string valid  
+✅ **Power BI Semantic Model:** 100% complete and correct
+✅ **Report Visuals:** 4 visuals configured per specification
+✅ **Data Relationships:** All FK relationships active and validated
+✅ **Measures:** All DAX measures syntactically correct and logically sound
+✅ **Connectivity:** PostgreSQL connection string valid
 
 ### Decision
 
 **STATUS: ✅ GO FOR DELIVERY**
 
 El modelo Power BI está completamente funcional y listo para:
+
 1. Entrega a profesores
 2. Visualización de análisis empresariales
 3. Soporte para toma de decisiones Starbucks
@@ -318,12 +333,14 @@ python etl_starbucks.py
 ### Para Profesores/Stakeholders
 
 1. **Descargar** repositorio (si no lo tienen):
+
    ```bash
    git clone https://github.com/mandelbaummatias/starbucks-tp.git
    cd starbucks-tp
    ```
 
 2. **Setup Database** (una sola vez):
+
    ```bash
    psql -U postgres -d postgres -f Database/01_SETUP_DATABASE.sql
    psql -U postgres -d starbucks_dw_raw -f Database/setup_starbucks.sql
@@ -344,20 +361,23 @@ python etl_starbucks.py
 
 ### Si el modelo no carga:
 
-**Problema:** "PostgreSQL connection failed"  
-**Solución:**  
+**Problema:** "PostgreSQL connection failed"
+**Solución:**
+
 - Verificar que PostgreSQL está corriendo: `psql -U postgres -c "\list"`
 - Verificar que la BD existe: `SELECT datname FROM pg_database WHERE datname = 'starbucks_dw_raw';`
 - Verificar credenciales en TMDL connection string
 
-**Problema:** "Visuals show blank"  
-**Solución:**  
+**Problema:** "Visuals show blank"
+**Solución:**
+
 - Verificar que fact_orders contiene datos: `SELECT COUNT(*) FROM star.fact_orders;`
 - Click refresh en cada visual (right-click → Refresh)
 - Si sigue en blanco: verificar FK constraints → `SELECT * FROM star.fact_orders LIMIT 1;`
 
-**Problema:** "Measures not calculating"  
-**Solución:**  
+**Problema:** "Measures not calculating"
+**Solución:**
+
 - Verificar sintaxis DAX en Measure grid
 - Recrear medida desde cero si tiene error
 
@@ -371,7 +391,7 @@ El **Power BI Starbucks** está **100% funcional** y listo para entrega. Todos l
 
 ---
 
-**Power BI Status Report**  
-**Status:** ✅ **GO FOR DELIVERY**  
-**Reviewer:** QA Automation  
+**Power BI Status Report**
+**Status:** ✅ **GO FOR DELIVERY**
+**Reviewer:** QA Automation
 **Fecha:** 23 de Marzo, 2026
