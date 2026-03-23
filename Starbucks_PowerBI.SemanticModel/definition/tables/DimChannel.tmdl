@@ -31,14 +31,10 @@ table DimChannel
 		mode: import
 		source =
 				let
-				    Origen = vw_orders_starbucks,
-				    #"Filas filtradas" = Table.SelectColumns(Origen, {"order_channel", "order_ahead"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas"),
-				    #"Indice agregado" = Table.AddIndexColumn(#"Duplicados quitados", "channel_id", 1, 1, Int64.Type),
-				    #"Columna renombrada" = Table.RenameColumns(#"Indice agregado",{{"order_ahead", "is_order_ahead"}}),
-				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columna renombrada",{{"is_order_ahead", type logical}})
+				    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+				    Source = Origen{[Schema="star",Item="dim_channel"]}[Data]
 				in
-				    #"Tipo cambiado"
+				    Source
 
 	annotation PBI_NavigationStepName = Navegación
 

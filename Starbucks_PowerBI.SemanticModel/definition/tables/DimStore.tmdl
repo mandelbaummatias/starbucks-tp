@@ -1,6 +1,15 @@
 table DimStore
 	lineageTag: 3e8b24ad-5063-4328-97c9-7a88f5d1164a
 
+	column store_id_pk
+		dataType: int64
+		formatString: 0
+		lineageTag: 73872071-4bdc-48e3-92f1-51f1f41690e4
+		summarizeBy: none
+		sourceColumn: store_id_pk
+
+		annotation SummarizationSetBy = Automatic
+
 	column store_id
 		dataType: string
 		lineageTag: cbbdcaec-5bbf-4fad-8b4c-01122c396ffc
@@ -44,11 +53,10 @@ table DimStore
 		mode: import
 		source =
 				let
-				    Origen = vw_orders_starbucks,
-				    #"Filas filtradas" = Table.SelectColumns(Origen, {"store_id", "store_location_type", "region"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas", {"store_id"})
+				    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+				    Source = Origen{[Schema="star",Item="dim_store"]}[Data]
 				in
-				    #"Duplicados quitados"
+				    Source
 
 	annotation PBI_NavigationStepName = Navegación
 

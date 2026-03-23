@@ -1,6 +1,15 @@
 table FactOrders
 	lineageTag: 2c4b3069-ab90-4e5c-877a-c152f1d690d8
 
+	column order_id_pk
+		dataType: int64
+		formatString: 0
+		lineageTag: c1d0130c-3240-4851-952f-8be8af46d429
+		summarizeBy: none
+		sourceColumn: order_id_pk
+
+		annotation SummarizationSetBy = Automatic
+
 	column order_id
 		dataType: string
 		lineageTag: c4d0130c-3240-4851-952f-8be8af46d428
@@ -9,19 +18,30 @@ table FactOrders
 
 		annotation SummarizationSetBy = Automatic
 
-	column customer_id
-		dataType: string
-		lineageTag: b9e5b52c-af91-4c2a-a6f2-eccdff538339
+	column channel_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c7572e08-b40e-4326-a864-b72ea999f7a8
 		summarizeBy: none
-		sourceColumn: customer_id
+		sourceColumn: channel_id
 
 		annotation SummarizationSetBy = Automatic
 
-	column store_id
-		dataType: string
+	column store_id_pk
+		dataType: int64
+		formatString: 0
 		lineageTag: 73872071-4bdc-48e3-92f1-51f1f41690e3
 		summarizeBy: none
-		sourceColumn: store_id
+		sourceColumn: store_id_pk
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id_pk
+		dataType: int64
+		formatString: 0
+		lineageTag: b9e5b52c-af91-4c2a-a6f2-eccdff538339
+		summarizeBy: none
+		sourceColumn: customer_id_pk
 
 		annotation SummarizationSetBy = Automatic
 
@@ -40,15 +60,6 @@ table FactOrders
 		lineageTag: b7572e08-b40e-4326-a864-b72ea999f7a8
 		summarizeBy: none
 		sourceColumn: time_id
-
-		annotation SummarizationSetBy = Automatic
-
-	column channel_id
-		dataType: int64
-		formatString: 0
-		lineageTag: c7572e08-b40e-4326-a864-b72ea999f7a8
-		summarizeBy: none
-		sourceColumn: channel_id
 
 		annotation SummarizationSetBy = Automatic
 
@@ -135,22 +146,10 @@ table FactOrders
 		mode: import
 		source =
 				let
-				    Origen = vw_orders_starbucks,
-				    DimChannelLocal = let
-				        Src = vw_orders_starbucks,
-				        #"Filas filtradas" = Table.SelectColumns(Src, {"order_channel", "order_ahead"}),
-				        #"Duplicados quitados" = Table.Distinct(#"Filas filtradas"),
-				        #"Indice agregado" = Table.AddIndexColumn(#"Duplicados quitados", "channel_id", 1, 1, Int64.Type)
-				    in
-				        #"Indice agregado",
-				    #"Unido con DimChannel" = Table.NestedJoin(Origen, {"order_channel", "order_ahead"}, DimChannelLocal, {"order_channel", "order_ahead"}, "DimChannel", JoinKind.LeftOuter),
-				    #"Expandido DimChannel" = Table.ExpandTableColumn(#"Unido con DimChannel", "DimChannel", {"channel_id"}),
-				    #"Personalizada agregada" = Table.AddColumn(#"Expandido DimChannel", "date_id", each Number.From(Date.ToText([order_date], "yyyyMMdd")), type number),
-				    #"Personalizada agregada1" = Table.AddColumn(#"Personalizada agregada", "time_id", each [hour_of_day], type number),
-				    #"Columnas seleccionadas" = Table.SelectColumns(#"Personalizada agregada1", {"order_id", "customer_id", "store_id", "date_id", "time_id", "channel_id", "drink_category", "cart_size", "num_customizations", "total_spend", "fulfillment_time_min", "customer_satisfaction", "has_food_item"}),
-				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columnas seleccionadas",{{"date_id", Int64.Type}, {"time_id", Int64.Type}, {"channel_id", Int64.Type}})
+				    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+				    Source = Origen{[Schema="star",Item="fact_orders"]}[Data]
 				in
-				    #"Tipo cambiado"
+				    Source
 
 	annotation PBI_NavigationStepName = Navegación
 

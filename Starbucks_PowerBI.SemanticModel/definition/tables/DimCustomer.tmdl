@@ -1,6 +1,15 @@
 table DimCustomer
 	lineageTag: 211c69bb-5020-49b1-a640-a8b81db14571
 
+	column customer_id_pk
+		dataType: int64
+		formatString: 0
+		lineageTag: aca8f428-1111-4aa1-8e40-50cc4b51207c
+		summarizeBy: none
+		sourceColumn: customer_id_pk
+
+		annotation SummarizationSetBy = Automatic
+
 	column customer_id
 		dataType: string
 		lineageTag: 49b5d428-abe2-4aa1-8e40-50cc4b51207b
@@ -38,11 +47,10 @@ table DimCustomer
 		mode: import
 		source =
 				let
-				    Origen = vw_orders_starbucks,
-				    #"Filas filtradas" = Table.SelectColumns(Origen, {"customer_id", "customer_age_group", "customer_gender", "is_rewards_member"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Filas filtradas", {"customer_id"})
+				    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+				    Source = Origen{[Schema="star",Item="dim_customer"]}[Data]
 				in
-				    #"Duplicados quitados"
+				    Source
 
 	annotation PBI_NavigationStepName = Navegación
 

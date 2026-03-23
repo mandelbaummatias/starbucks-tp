@@ -4,12 +4,12 @@ relationship c17bcb86-ea06-43ca-8f44-9e4ec49e7782
 	toColumn: LocalDateTable_d2151c68-6770-42e3-a2ae-86b6bfde072b.Date
 
 relationship AutoDetected_dba332ad-5469-4fcf-b07a-0df47d2de0ab
-	fromColumn: FactOrders.store_id
-	toColumn: DimStore.store_id
+	fromColumn: FactOrders.store_id_pk
+	toColumn: DimStore.store_id_pk
 
 relationship 725d8281-22d7-a591-ba6a-5fbd4f870af3
-	fromColumn: FactOrders.customer_id
-	toColumn: DimCustomer.customer_id
+	fromColumn: FactOrders.customer_id_pk
+	toColumn: DimCustomer.customer_id_pk
 
 relationship c1604907-2c06-5adb-bf66-75db1a46306e
 	fromColumn: FactOrders.date_id
