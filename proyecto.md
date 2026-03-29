@@ -220,8 +220,8 @@ boolean is_order_ahead
 
 ### Mismatches identificados
 
-1. `fact_orders` en el DDL incluye `is_order_ahead BOOLEAN`, pero el modelo estrella del `proyecto.md` no menciona este campo en la tabla de hechos. El ETL actual construye la dimensión `DimChannel` con `order_channel + is_order_ahead` y en la salida del hecho NO reexporta `is_order_ahead` (solo conserva a nivel de dimensión). 
-2. `DimDate` en el DOC describe columnas `month`, `quarter`, `year`; en el DDL son `month_num`, `quarter_num`, `year_num`. En el semantic model PBI se renombra a `month`, `quarter`, `year` durante la carga del modelo (coherente con el objetivo, sólo diferencia de nombre). 
+1. `fact_orders` en el DDL incluye `is_order_ahead BOOLEAN`, pero el modelo estrella del `proyecto.md` no menciona este campo en la tabla de hechos. El ETL actual construye la dimensión `DimChannel` con `order_channel + is_order_ahead` y en la salida del hecho NO reexporta `is_order_ahead` (solo conserva a nivel de dimensión).
+2. `DimDate` en el DOC describe columnas `month`, `quarter`, `year`; en el DDL son `month_num`, `quarter_num`, `year_num`. En el semantic model PBI se renombra a `month`, `quarter`, `year` durante la carga del modelo (coherente con el objetivo, sólo diferencia de nombre).
 3. `Nota: order_datetime se construye concatenando order_date y order_time` está conceptualmente OK, pero en la implementación ETL no se persiste como columna `order_datetime`; se genera en memoria con `full_date + order_time` y luego se derivan `date_id` y `time_id`.
 
 ### Recomendaciones
