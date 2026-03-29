@@ -52,14 +52,10 @@ table DimTime
 		mode: import
 		source =
 				let
-				    Origen = vw_orders_starbucks,
-				    #"Columnas seleccionadas" = Table.SelectColumns(Origen, {"hour_of_day", "time_period"}),
-				    #"Duplicados quitados" = Table.Distinct(#"Columnas seleccionadas"),
-				    #"Personalizada agregada" = Table.AddColumn(#"Duplicados quitados", "time_id", each [hour_of_day], type number),
-				    #"Agregada order_time" = Table.AddColumn(#"Personalizada agregada", "order_time", each #time([hour_of_day], 0, 0), type time),
-				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Agregada order_time",{{"time_id", Int64.Type}, {"hour_of_day", Int64.Type}})
+				    Origen = PostgreSQL.Database("localhost", "starbucks_dw_raw"),
+				    Source = Origen{[Schema="star",Item="dim_time"]}[Data]
 				in
-				    #"Tipo cambiado"
+				    Source
 
 	annotation PBI_NavigationStepName = Navegación
 
