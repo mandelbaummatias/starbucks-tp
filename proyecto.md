@@ -44,7 +44,9 @@ STORE ||--o{ ORDER : procesa
 
 CUSTOMER {
 
-string customer_id PK
+int customer_id_pk PK
+
+string customer_id
 
 string age_group
 
@@ -56,7 +58,9 @@ boolean is_rewards_member
 
 STORE {
 
-string store_id PK
+int store_id_pk PK
+
+string store_id
 
 string store_location_type
 
@@ -150,7 +154,9 @@ int customer_satisfaction
 
 DIM_CUSTOMER {
 
-string customer_id PK
+int customer_id_pk PK
+
+string customer_id
 
 string customer_age_group
 
@@ -162,7 +168,9 @@ boolean is_rewards_member
 
 DIM_STORE {
 
-string store_id PK
+int store_id_pk PK
+
+string store_id
 
 string store_location_type
 
@@ -174,7 +182,7 @@ DIM_DATE {
 
 int date_id PK
 
-date order_date
+date full_date
 
 string day_of_week
 
@@ -326,8 +334,10 @@ Proporciona el contexto sobre quién realiza la compra.
 
 | **Columna**          | **Tipo** | **Origen**         |
 | -------------------- | -------- | ------------------ |
-| **customer_id (PK)** | VARCHAR  | customer_id        |
-| ---                  | ---      | ---                |
+| **customer_id_pk (PK)** | INT      | Surrogate key       |
+| ---                     | ---      | ---                 |
+| customer_id             | VARCHAR  | customer_id         |
+| ---                     | ---      | ---                 |
 | customer_age_group   | VARCHAR  | customer_age_group |
 | ---                  | ---      | ---                |
 | customer_gender      | VARCHAR  | customer_gender    |
@@ -343,8 +353,10 @@ Permite el análisis por ubicación física.
 
 | **Columna**         | **Tipo** | **Origen**          |
 | ------------------- | -------- | ------------------- |
-| **store_id (PK)**   | VARCHAR  | store_id            |
-| ---                 | ---      | ---                 |
+| **store_id_pk (PK)**    | INT      | Surrogate key       |
+| ---                     | ---      | ---                 |
+| store_id                | VARCHAR  | store_id            |
+| ---                     | ---      | ---                 |
 | store_location_type | VARCHAR  | store_location_type |
 | ---                 | ---      | ---                 |
 | region              | VARCHAR  | region              |
@@ -360,7 +372,7 @@ Estructura para análisis de tendencias en el tiempo.
 | ---------------- | -------- | ----------------------------- |
 | **date_id (PK)** | INT      | Surrogate key                 |
 | ---              | ---      | ---                           |
-| order_date       | DATE     | order_date                    |
+| full_date        | DATE     | order_date                    |
 | ---              | ---      | ---                           |
 | day_of_week      | VARCHAR  | day_of_week (directo del CSV) |
 | ---              | ---      | ---                           |
@@ -411,7 +423,7 @@ Las claves primarias (PK) marcadas como Surrogate key deben ser generadas durant
 
 ## **Dimensión: star.dim_channel**
 
-<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>DISTINCT por canal; channel_sk generado con SERIAL.</h2></th></tr></thead></table></div>
+<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>DISTINCT por canal; channel_id generado con SERIAL.</h2></th></tr></thead></table></div>
 
 ##
 
@@ -419,7 +431,7 @@ Las claves primarias (PK) marcadas como Surrogate key deben ser generadas durant
 
 <div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>store_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>store_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_store</h2></th><th><h2><a id="_671tqeiqgr35"></a>Clave de negocio; DISTINCT por store_id.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>store_location_type</h2></th><th><h2><a id="_671tqeiqgr35"></a>store_location_type</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_store</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa (Urban / Suburban / Rural).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>region</h2></th><th><h2><a id="_671tqeiqgr35"></a>region</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_store</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa (Northeast / Midwest / etc.).</h2></th></tr></thead></table></div>
 
-## store_sk se genera como SERIAL en la base de datos; el ETL lo popula luego del TRUNCATE + INSERT
+## store_id_pk se genera como SERIAL en la base de datos; el ETL lo popula luego del TRUNCATE + INSERT
 
 ##
 
@@ -431,19 +443,19 @@ Las claves primarias (PK) marcadas como Surrogate key deben ser generadas durant
 
 ## **Dimensión: star.dim_date**
 
-<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>full_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>Conversión a DATE.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>date_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>STRFTIME("%Y%m%d") -&gt; entero YYYYMMDD (clave de negocio).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>day_of_week</h2></th><th><h2><a id="_671tqeiqgr35"></a>day_of_week</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>Tomado de raw_orders directamente (Mon / Tue / … / Sun).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>day_of_month</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(DAY FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>month_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(MONTH FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>quarter_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(QUARTER FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>year_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(YEAR FROM order_date).</h2></th></tr></thead></table></div>
+<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>full_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>Conversión a DATE.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>date_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>STRFTIME("%Y%m%d") -&gt; entero YYYYMMDD (clave de negocio).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>day_of_week</h2></th><th><h2><a id="_671tqeiqgr35"></a>day_of_week</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>Tomado de raw_orders directamente (Mon / Tue / … / Sun).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>day_of_month</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(DAY FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>month_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(MONTH FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>quarter_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(QUARTER FROM order_date).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>year_num</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(YEAR FROM order_date).</h2></th></tr></thead></table></div>
 
 ##
 
 ## **Dimensión: star.dim_time**
 
-<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(HOUR FROM order_time) -&gt; entero 0-23.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>hour_of_day</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>Igual a time_sk.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_period</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>Regla: 7-9 -&gt; <em>Morning Rush</em>; 10-13 -&gt; <em>Mid-Day</em>; 14-17 -&gt; <em>Afternoon</em>; 18-21 -&gt; <em>Evening</em>; resto -&gt; <em>Other</em>.</h2></th></tr></thead></table></div>
+<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>EXTRACT(HOUR FROM order_time) -&gt; entero 0-23.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>hour_of_day</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>Igual a time_id.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_period</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>Regla: 7-9 -&gt; <em>Morning Rush</em>; 10-13 -&gt; <em>Mid-Day</em>; 14-17 -&gt; <em>Afternoon</em>; 18-21 -&gt; <em>Evening</em>; resto -&gt; <em>Other</em>.</h2></th></tr></thead></table></div>
 
 ##
 
 ## **Fact: star.fact_orders**
 
-<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Dimensión degenerada; se conserva como atributo.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>channel_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_channel -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>store_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>store_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_store -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>customer_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>customer_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_customer -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>date_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_date (YYYYMMDD) -&gt; clave de negocio.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time (hora)</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_sk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_time (hora 0-23) -&gt; clave de negocio.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Se conserva el valor TIME original (grano fino).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>drink_category</h2></th><th><h2><a id="_671tqeiqgr35"></a>drink_category</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>has_food_item</h2></th><th><h2><a id="_671tqeiqgr35"></a>has_food_item</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa (booleano).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_ahead</h2></th><th><h2><a id="_671tqeiqgr35"></a>is_order_ahead</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Renombrado</strong> para mayor claridad semántica; se conserva en DimChannel.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>cart_size</h2></th><th><h2><a id="_671tqeiqgr35"></a>cart_size</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: cantidad de ítems en el pedido.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>num_customizations</h2></th><th><h2><a id="_671tqeiqgr35"></a>num_customizations</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: número de personalizaciones.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>total_spend</h2></th><th><h2><a id="_671tqeiqgr35"></a>total_spend</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: gasto total en USD.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>fulfillment_time_min</h2></th><th><h2><a id="_671tqeiqgr35"></a>fulfillment_time_min</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: tiempo de preparación en minutos.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>customer_satisfaction</h2></th><th><h2><a id="_671tqeiqgr35"></a>customer_satisfaction</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: puntaje de satisfacción (1-5).</h2></th></tr></thead></table></div>
+<div class="joplin-table-wrapper"><table><thead><tr><th><h2><a id="_671tqeiqgr35"></a><strong>Columna RAW</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Columna Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Tabla Destino</strong></h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Lógica aplicada</strong></h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Dimensión degenerada; se conserva como atributo.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a>channel_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_channel -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>store_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>store_id_pk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_store -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>customer_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>customer_id_pk</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_customer -&gt; clave subrogada.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_date</h2></th><th><h2><a id="_671tqeiqgr35"></a>date_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_date (YYYYMMDD) -&gt; clave de negocio.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time (hora)</h2></th><th><h2><a id="_671tqeiqgr35"></a>time_id</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>JOIN con dim_time (hora 0-23) -&gt; clave de negocio.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>order_time</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Se conserva el valor TIME original (grano fino).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>drink_category</h2></th><th><h2><a id="_671tqeiqgr35"></a>drink_category</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>has_food_item</h2></th><th><h2><a id="_671tqeiqgr35"></a>has_food_item</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Transferencia directa (booleano).</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>order_ahead</h2></th><th><h2><a id="_671tqeiqgr35"></a>is_order_ahead</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.dim_channel</h2></th><th><h2><a id="_671tqeiqgr35"></a><strong>Renombrado</strong> para mayor claridad semántica; se conserva en DimChannel.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>cart_size</h2></th><th><h2><a id="_671tqeiqgr35"></a>cart_size</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: cantidad de ítems en el pedido.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>num_customizations</h2></th><th><h2><a id="_671tqeiqgr35"></a>num_customizations</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: número de personalizaciones.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>total_spend</h2></th><th><h2><a id="_671tqeiqgr35"></a>total_spend</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: gasto total en USD.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>fulfillment_time_min</h2></th><th><h2><a id="_671tqeiqgr35"></a>fulfillment_time_min</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: tiempo de preparación en minutos.</h2></th></tr><tr><th><h2><a id="_671tqeiqgr35"></a>customer_satisfaction</h2></th><th><h2><a id="_671tqeiqgr35"></a>customer_satisfaction</h2></th><th><h2><a id="_671tqeiqgr35"></a>star.fact_orders</h2></th><th><h2><a id="_671tqeiqgr35"></a>Medida: puntaje de satisfacción (1-5).</h2></th></tr></thead></table></div>
 
 ##
 
@@ -486,7 +498,7 @@ El pipeline ETL se implementó en **Python** usando pandas + sqlalchemy + psycop
 Todas las dimensiones utilizan claves subrogadas. Para las dimensiones de entidades se usa SERIAL, mientras que para dim_date y dim_time se utilizan claves de negocio inteligentes.
 
 - **SERIAL para dimensiones de entidades** (dim_channel, dim_store, dim_customer): Protege contra cambios en los valores de negocio (ej. si un canal se renombra, la clave subrogada no cambia y la integridad del historial se preserva).
-- **Claves de negocio para tiempo** (dim_date, dim_time): Los enteros YYYYMMDD y HH son auto-descriptivos, fáciles de filtrar en SQL (WHERE date_sk BETWEEN 20240101 AND 20240131) y eliminan la necesidad de un lookup adicional.
+- **Claves de negocio para tiempo** (dim_date, dim_time): Los enteros YYYYMMDD y HH son auto-descriptivos, fáciles de filtrar en SQL (WHERE date_id BETWEEN 20240101 AND 20240131) y eliminan la necesidad de un lookup adicional.
 - **Integridad Referencial:** fact_orders declara FOREIGN KEY a cada tabla de dimensión, garantizando consistencia en la base de datos.
 
 ## **Estrategia Full Refresh (Carga Completa)**
