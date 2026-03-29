@@ -114,7 +114,9 @@ FACT_ORDERS ||--o{ DIM_CHANNEL : "channel_id"
 
 FACT_ORDERS {
 
-string order_id PK
+string order_id_pk PK (surrogate key autogenerado en la tabla `star.fact_orders`)
+
+string order_id (business key conservado como atributo)
 
 int channel_id FK
 
@@ -132,8 +134,6 @@ string drink_category "Atributo degenerado"
 
 boolean has_food_item
 
-boolean is_order_ahead
-
 int cart_size
 
 int num_customizations
@@ -145,6 +145,8 @@ decimal fulfillment_time_min
 int customer_satisfaction
 
 }
+
+-- Nota: `is_order_ahead` se representa en `DIM_CHANNEL` (FK en `fact_orders` mediante `channel_id`) y no se almacena directamente en `FACT_ORDERS`.
 
 DIM_CUSTOMER {
 
@@ -185,6 +187,8 @@ int quarter_num
 int year_num
 
 }
+
+-- Nota: En modelo físico `dim_date` los atributos son `month_num`, `quarter_num`, `year_num`. En el modelo semántico Power BI se muestran como `month`, `quarter`, `year`.
 
 DIM_TIME {
 
@@ -279,7 +283,9 @@ Cada dimensión aporta el contexto necesario para segmentar, filtrar y profundiz
 
 | **Columna**           | **Tipo** | **Descripción**                        |
 | --------------------- | -------- | -------------------------------------- |
-| order_id (PK)         | VARCHAR  | ID único del pedido.                   |
+| order_id_pk (PK)      | INT      | Surrogate key autogenerada.            |
+| ---                   | ---      | ---                                    |
+| order_id              | VARCHAR  | ID único del pedido (business key).    |
 | ---                   | ---      | ---                                    |
 | customer_id (FK)      | VARCHAR  | Relación con DimCustomer.              |
 | ---                   | ---      | ---                                    |
@@ -360,11 +366,11 @@ Estructura para análisis de tendencias en el tiempo.
 | ---              | ---      | ---                           |
 | day_of_month     | INT      | Extraído de order_date        |
 | ---              | ---      | ---                           |
-| month            | INT      | Extraído de order_date        |
+| month_num       | INT      | Extraído de order_date        |
 | ---              | ---      | ---                           |
-| quarter          | INT      | Extraído de order_date        |
+| quarter_num     | INT      | Extraído de order_date        |
 | ---              | ---      | ---                           |
-| year             | INT      | Extraído de order_date        |
+| year_num        | INT      | Extraído de order_date        |
 | ---              | ---      | ---                           |
 
 ### **DimTime (Temporal - Horaria)**
