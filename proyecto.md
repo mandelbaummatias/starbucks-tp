@@ -116,17 +116,23 @@ FACT_ORDERS {
 
 string order_id PK
 
-string customer_id FK
+int channel_id FK
 
-string store_id FK
+int store_id_pk FK
+
+int customer_id_pk FK
 
 int date_id FK
 
 int time_id FK
 
-int channel_id FK
+time order_time
 
 string drink_category "Atributo degenerado"
+
+boolean has_food_item
+
+boolean is_order_ahead
 
 int cart_size
 
@@ -137,8 +143,6 @@ decimal total_spend
 decimal fulfillment_time_min
 
 int customer_satisfaction
-
-boolean has_food_item
 
 }
 
@@ -174,11 +178,11 @@ string day_of_week
 
 int day_of_month
 
-int month
+int month_num
 
-int quarter
+int quarter_num
 
-int year
+int year_num
 
 }
 
@@ -204,7 +208,27 @@ boolean is_order_ahead
 
 }
 
-Nota: order_datetime se construye concatenando order_date y order_time del CSV.
+## 5\. Validación de consistencia entre documentación y solución implementada
+
+- Tablas dimension y hechos documentadas en el modelo conceptual corresponden 1:1 con los objetos físicos del DDL (`star.dim_channel`, `star.dim_store`, `star.dim_customer`, `star.dim_date`, `star.dim_time`, `star.fact_orders`), el ETL en `Scripts/etl_starbucks.py` y el semantic model en `Starbucks_PowerBI.SemanticModel`.
+- Relaciones con claves foráneas confirmadas en `Database/02_CREATE_STAR_SCHEMA.sql` y `Starbucks_PowerBI.SemanticModel/definition/relationships.tmdl`:
+  - `fact_orders.channel_id -> dim_channel.channel_id`
+  - `fact_orders.store_id_pk -> dim_store.store_id_pk`
+  - `fact_orders.customer_id_pk -> dim_customer.customer_id_pk`
+  - `fact_orders.date_id -> dim_date.date_id`
+  - `fact_orders.time_id -> dim_time.time_id`
+
+### Mismatches identificados
+
+1. `fact_orders` en el DDL incluye `is_order_ahead BOOLEAN`, pero el modelo estrella del `proyecto.md` no menciona este campo en la tabla de hechos. El ETL actual construye la dimensión `DimChannel` con `order_channel + is_order_ahead` y en la salida del hecho NO reexporta `is_order_ahead` (solo conserva a nivel de dimensión). 
+2. `DimDate` en el DOC describe columnas `month`, `quarter`, `year`; en el DDL son `month_num`, `quarter_num`, `year_num`. En el semantic model PBI se renombra a `month`, `quarter`, `year` durante la carga del modelo (coherente con el objetivo, sólo diferencia de nombre). 
+3. `Nota: order_datetime se construye concatenando order_date y order_time` está conceptualmente OK, pero en la implementación ETL no se persiste como columna `order_datetime`; se genera en memoria con `full_date + order_time` y luego se derivan `date_id` y `time_id`.
+
+### Recomendaciones
+
+- Ajustar la sección de `FactOrders` en el documento para incluir `is_order_ahead` o dejar constancia que es exclusivo de la dimensión `DimChannel`.
+- Normalizar la nomenclatura de `month_num/quarter_num/year_num` en el texto de DimDate para evitar confusión con `month/quarter/year`.
+- Mantener la nota de `order_datetime` en el diseño conceptual, y documentar exactamente cómo se gestiona en ETL (p.ej. `full_date` + `order_time` -> `date_id`, `time_id`).
 
 Nota: El campo day_of_week del CSV no se almacena explícitamente en ORDER porque es derivable de order_datetime, pero podría incluirse si se desea. En el modelo normalizado no es necesario, ya que se puede calcular.
 
