@@ -1,10 +1,7 @@
-# Helper script to run SQL scripts with a password prompt (Interactive)
 param(
     [string]$SqlFile = "Database/solve_business_problem.sql",
     [string]$Database = "starbucks_dw_raw"
 )
-
-# Only prompt if PGPASSWORD is not already set in the environment
 if (-not $env:PGPASSWORD) {
     $password = Read-Host -Prompt "Enter PostgreSQL password for user 'postgres'"
     if (-not $password) {

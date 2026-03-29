@@ -1,13 +1,6 @@
-# Script: Create_Report_Visuals.ps1
-# Purpose: Programmatically generate visual components for the Starbucks Power BI report
-# using the PBIR (Power BI Enhanced Report Format) specification.
-
-# Determine the directory where this script resides, then go one level up to the project root
 $ProjectRoot = (Resolve-Path "$PSScriptRoot\..").Path
 $reportDir = Join-Path $ProjectRoot "Starbucks_PowerBI.Report"
 $pagesDir = Join-Path $reportDir "definition\pages"
-
-# Find the first page (or specify "17100a3adf3ef7df355a")
 $pageFolder = Get-ChildItem -Path $pagesDir -Directory | Select-Object -First 1
 if (-not $pageFolder) {
     Write-Error "No page folder found in the report."
@@ -15,16 +8,12 @@ if (-not $pageFolder) {
 }
 
 $visualsDir = Join-Path $pageFolder.FullName "visuals"
-
-# Ensure visuals directory exists
 if (Test-Path $visualsDir) {
     Write-Host "Cleaning up existing visuals..."
     Remove-Item -Path "$visualsDir\*" -Recurse -Force
 } else {
     New-Item -ItemType Directory -Path $visualsDir | Out-Null
 }
-
-# Function to generate a basic visual struct
 function Create-VisualJson {
     param (
         [string]$VisualName,
@@ -37,8 +26,6 @@ function Create-VisualJson {
     )
 
     $schema = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.2.0/schema.json"
-
-    # Creating a hashtable structure that converts cleanly to JSON
     $visualObj = @{
         "`$schema" = $schema
         name = $VisualName
@@ -89,14 +76,10 @@ function Create-VisualJson {
 }
 
 Write-Host "Generating programmatic visuals for Starbucks Operations Dashboard..."
-
-# Visual 1: Channel Comparison (Avg_Fulfillment_Time & Total_Orders)
 Create-VisualJson -VisualName "vis_channel_summary" -VisualType "columnChart" -X 10 -Y 10 -Width 600 -Height 180 -TitleText "Channel Performance During Morning Rush"
 
-# Visual 2: Complexity vs Delay by Channel
 Create-VisualJson -VisualName "vis_complexity_impact" -VisualType "barChart" -X 630 -Y 10 -Width 600 -Height 180 -TitleText "Complexity vs Delay Correlation"
 
-# Visual 3: Geographic Differences
 Create-VisualJson -VisualName "vis_geo_differences" -VisualType "scatterChart" -X 10 -Y 210 -Width 600 -Height 200 -TitleText "Geographic Differences & Satisfaction"
 
 # Visual 4: Weekly Patterns

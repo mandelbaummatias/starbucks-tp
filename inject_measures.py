@@ -1,6 +1,4 @@
 import os
-
-# Path to the FactOrders.tmdl file within the Power BI Semantic Model
 current_dir = os.path.dirname(os.path.abspath(__file__))
 tmdl_path = os.path.join(current_dir, "Starbucks_PowerBI.SemanticModel", "definition", "tables", "FactOrders.tmdl")
 
@@ -19,16 +17,11 @@ def inject_measures():
     if not os.path.exists(tmdl_path):
         print(f"Error: {tmdl_path} not found.")
         return
-        
     with open(tmdl_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-    
-    # Check if measures already exist to avoid duplication
     if "measure 'Avg Fulfillment Time'" in "".join(lines):
         print("Measures already injected.")
         return
-
-    # Encontrar la posición después de la definición de columnas y antes de partitions
     insert_pos = 0
     for i, line in enumerate(lines):
         if 'column' in line:
@@ -36,7 +29,6 @@ def inject_measures():
         if 'partition' in line:
             insert_pos = i - 1
             break
-            
     lines.insert(insert_pos + 1, measures_to_add)
     
     with open(tmdl_path, 'w', encoding='utf-8') as f:

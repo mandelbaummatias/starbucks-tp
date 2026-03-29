@@ -1,12 +1,4 @@
--- ============================================================
--- STEP 2: RUN THIS SCRIPT CONNECTED TO 'starbucks_dw_raw'
--- ============================================================
-
 CREATE SCHEMA IF NOT EXISTS starbucks;
-
--- ============================================================
--- PASO 2: Tabla staging (volcado crudo del CSV)
--- ============================================================
 
 CREATE TABLE IF NOT EXISTS starbucks.raw_orders (
     customer_id           VARCHAR(20),
@@ -31,30 +23,14 @@ CREATE TABLE IF NOT EXISTS starbucks.raw_orders (
     customer_satisfaction INT
 );
 
--- ============================================================
--- PASO 3: Carga de Datos desde CSV
--- ============================================================
-
 \copy starbucks.raw_orders FROM 'Database/starbucks_customer_ordering_patterns.csv' WITH (FORMAT csv, HEADER true);
-
--- ============================================================
--- Verificación de Carga
--- ============================================================
 
 SELECT COUNT(*) AS total_registros
 FROM starbucks.raw_orders;
 
--- ============================================================
--- Verificación de Datos
--- ============================================================
-
 SELECT *
 FROM starbucks.raw_orders
 LIMIT 10;
-
--- ============================================================
--- Vista con Campos Derivados
--- ============================================================
 
 DROP VIEW IF EXISTS starbucks.vw_orders_starbucks;
 

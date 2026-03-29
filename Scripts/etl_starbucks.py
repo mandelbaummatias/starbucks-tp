@@ -1,31 +1,8 @@
-"""
-etl_starbucks.py
-================
-ETL pipeline: starbucks.raw_orders  →  star schema (physical DW)
-
-Steps
------
-1. EXTRACT  – Read raw_orders from PostgreSQL.
-2. TRANSFORM – Build each dimension DataFrame (deduplication + surrogate key
-               mapping) and the fact table (FK substitution, column rename).
-3. LOAD      – Truncate-then-insert every star schema table via SQLAlchemy.
-
-Usage
------
-    python Scripts/etl_starbucks.py
-
-Dependencies
-------------
-    pip install pandas sqlalchemy psycopg2-binary
-"""
-
 import sys
 import pandas as pd
 from sqlalchemy import create_engine, text
 
-# ─────────────────────────────────────────────────────────────
-# Connection parameters  (edit as needed)
-# ─────────────────────────────────────────────────────────────
+
 DB_HOST     = "localhost"
 DB_PORT     = 5432
 DB_NAME     = "starbucks_dw_raw"
@@ -37,9 +14,6 @@ CONNECTION_STRING = (
     f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
-# ─────────────────────────────────────────────────────────────
-# Helpers
-# ─────────────────────────────────────────────────────────────
 def get_engine():
     engine = create_engine(CONNECTION_STRING, future=True)
     print(f"[ETL] Connected to {DB_NAME} @ {DB_HOST}:{DB_PORT}")
@@ -47,27 +21,20 @@ def get_engine():
 
 
 def truncate_and_insert(engine, df: pd.DataFrame, schema: str, table: str) -> None:
-    """Truncate a table then bulk-insert a DataFrame."""
     with engine.begin() as conn:
         conn.execute(text(f'TRUNCATE TABLE {schema}.{table} RESTART IDENTITY CASCADE'))
     df.to_sql(table, engine, schema=schema, if_exists="append", index=False, method="multi")
     print(f"[ETL]   → {schema}.{table}: {len(df):,} rows loaded.")
 
 
-# ─────────────────────────────────────────────────────────────
-# EXTRACT
-# ─────────────────────────────────────────────────────────────
 def extract(engine) -> pd.DataFrame:
-    """Pull all raw orders into a DataFrame."""
     print("[ETL] Extracting from starbucks.raw_orders …")
     df = pd.read_sql("SELECT * FROM starbucks.raw_orders", engine)
     print(f"[ETL]   → {len(df):,} rows extracted.")
     return df
 
 
-# ─────────────────────────────────────────────────────────────
-# TRANSFORM
-# ─────────────────────────────────────────────────────────────
+
 def build_dim_channel(df: pd.DataFrame) -> pd.DataFrame:
     channels = (
         df[["order_channel", "order_ahead"]]
@@ -178,13 +145,6 @@ def build_fact(df: pd.DataFrame,
     # --- merge time (just validate time_id exists in dim) ---
     fact = fact.merge(dim_time[["time_id"]],
                       on="time_id", how="left")
-
-    # --- rename column per plan ---
-    # The 'is_order_ahead' from dim_channel is now the correct one.
-    # The original 'order_ahead' column is no longer needed in the fact table.
-    # It's implicitly dropped by not being included in fact_out.
-
-    # --- select only fact columns ---
     fact_out = fact[[
         "order_id",
         "channel_id", "store_id_pk", "customer_id_pk", "date_id", "time_id",
@@ -192,8 +152,6 @@ def build_fact(df: pd.DataFrame,
         "cart_size", "num_customizations", "total_spend",
         "fulfillment_time_min", "customer_satisfaction"
     ]].copy()
-
-    # ── Validation: detect rows with missing FKs ──────────────────────────
     fk_cols = ["channel_id", "store_id_pk", "customer_id_pk", "date_id", "time_id"]
     nulls = fact_out[fk_cols].isnull().sum()
     if nulls.any():
@@ -204,11 +162,7 @@ def build_fact(df: pd.DataFrame,
     return fact_out
 
 
-# ─────────────────────────────────────────────────────────────
-# LOAD
-# ─────────────────────────────────────────────────────────────
 def load(engine, dims: dict, fact: pd.DataFrame) -> None:
-    """Truncate-then-insert into every star schema table."""
     print("[ETL] Loading dimensions …")
     for table_name, df in dims.items():
         truncate_and_insert(engine, df, "star", table_name)
@@ -217,19 +171,12 @@ def load(engine, dims: dict, fact: pd.DataFrame) -> None:
     truncate_and_insert(engine, fact, "star", "fact_orders")
 
 
-# ─────────────────────────────────────────────────────────────
-# VERIFICATION
-# ─────────────────────────────────────────────────────────────
 def verify(engine, raw_count: int) -> None:
     print("\n[ETL] ── Verification ─────────────────────────────────────")
-
-    # 1. Row count
     with engine.connect() as conn:
         fact_count = conn.execute(text("SELECT COUNT(*) FROM star.fact_orders")).scalar()
     match = "✔ MATCH" if fact_count == raw_count else "✗ MISMATCH"
     print(f"[ETL]   raw_orders: {raw_count:,}  |  fact_orders: {fact_count:,}  →  {match}")
-
-    # 2. NULL FK check
     null_query = """
     SELECT
         SUM(CASE WHEN channel_id  IS NULL THEN 1 ELSE 0 END) AS null_channel,
@@ -242,8 +189,6 @@ def verify(engine, raw_count: int) -> None:
     with engine.connect() as conn:
         row = conn.execute(text(null_query)).fetchone()
     print(f"[ETL]   NULL FKs → channel:{row[0]} store:{row[1]} customer:{row[2]} date:{row[3]} time:{row[4]}")
-
-    # 3. Avg fulfillment consistency (old view vs new star schema)
     old_q = """
     SELECT order_channel,
            ROUND(AVG(fulfillment_time_min)::numeric, 2) AS avg_time
@@ -263,7 +208,6 @@ def verify(engine, raw_count: int) -> None:
 
     comparison = old_df.merge(new_df, on="order_channel", suffixes=("_view", "_star"))
     comparison["delta"] = (comparison["avg_time_view"] - comparison["avg_time_star"]).abs()
-    print("[ETL]   Avg fulfillment time comparison (view vs star):")
     print(comparison.to_string(index=False))
     if (comparison["delta"] == 0).all():
         print("[ETL]   ✔  Results are identical — ETL is consistent.")
@@ -271,22 +215,13 @@ def verify(engine, raw_count: int) -> None:
         print("[ETL]   ⚠  Discrepancies found — investigate transforms.")
     print("[ETL] ────────────────────────────────────────────────────────\n")
 
-
-# ─────────────────────────────────────────────────────────────
-# MAIN
-# ─────────────────────────────────────────────────────────────
 def main():
     print("=" * 60)
     print("  Starbucks ETL Pipeline — Star Schema Load")
     print("=" * 60)
-
     engine = get_engine()
-
-    # 1. Extract
     raw_df    = extract(engine)
     raw_count = len(raw_df)
-
-    # 2. Transform
     print("[ETL] Building dimensions …")
     dim_channel  = build_dim_channel(raw_df)
     dim_store    = build_dim_store(raw_df)
@@ -296,7 +231,6 @@ def main():
 
     print("[ETL] Building fact table …")
     fact = build_fact(raw_df, dim_channel, dim_store, dim_customer, dim_date, dim_time)
-
     dims = {
         "dim_channel":  dim_channel,
         "dim_store":    dim_store,

@@ -1,12 +1,3 @@
--- ============================================================
--- BUSINESS QUERIES — STAR SCHEMA VERSION
--- Run after etl_starbucks.py has populated the star schema.
--- Database: starbucks_dw_raw
--- ============================================================
-
--- ─────────────────────────────────────────────────────────────
--- Q1. Channel performance during Morning Rush (07:00 – 09:00)
--- ─────────────────────────────────────────────────────────────
 SELECT
     dc.order_channel,
     ROUND(AVG(fo.fulfillment_time_min)::numeric, 2) AS avg_fulfillment_min,
@@ -19,9 +10,6 @@ GROUP BY  dc.order_channel
 ORDER BY  avg_fulfillment_min DESC;
 
 
--- ─────────────────────────────────────────────────────────────
--- Q2. Order complexity vs delay per channel (Morning Rush)
--- ─────────────────────────────────────────────────────────────
 SELECT
     dc.order_channel,
     ROUND(AVG(fo.cart_size)::numeric,           2) AS avg_cart_size,
@@ -38,9 +26,6 @@ GROUP BY  dc.order_channel
 ORDER BY  avg_fulfillment_min DESC;
 
 
--- ─────────────────────────────────────────────────────────────
--- Q3. Geographic differences: Top 10 slowest segments
--- ─────────────────────────────────────────────────────────────
 SELECT
     ds.store_location_type,
     ds.region,
@@ -55,9 +40,6 @@ ORDER BY  avg_fulfillment_min DESC
 LIMIT 10;
 
 
--- ─────────────────────────────────────────────────────────────
--- Q4. Weekly fulfillment patterns (all day, all channels)
--- ─────────────────────────────────────────────────────────────
 SELECT
     dd.day_of_week,
     ROUND(AVG(fo.fulfillment_time_min)::numeric, 2) AS avg_fulfillment_min,
