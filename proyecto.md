@@ -528,6 +528,7 @@ El diseño asegura que el sistema sea capaz de responder a las preguntas crític
    - Ordenes Mobile App son más eficientes en prom.
    - Factores geográficos muestran variaciones, pero el mayor impacto lo da el canal.
    - Días de la semana tienen rango estrecho de variación, lo cual señala un detalle operativo constante.
+
 ## Reportes / Visuales (sintetizado de reverse_engineering_doc)
 
 ### Visual 1: Comparativa de Canales (Clustered Column)
