@@ -60,7 +60,6 @@ CREATE TABLE star.fact_orders (
     order_time            TIME,
     drink_category        VARCHAR(40),
     has_food_item         BOOLEAN,
-    is_order_ahead        BOOLEAN,
 
     cart_size             INT,
     num_customizations    INT,
