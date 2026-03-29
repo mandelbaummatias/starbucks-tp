@@ -30,7 +30,7 @@ def inject_measures():
             insert_pos = i - 1
             break
     lines.insert(insert_pos + 1, measures_to_add)
-    
+
     with open(tmdl_path, 'w', encoding='utf-8') as f:
         f.writelines(lines)
     print("Medidas inyectadas exitosamente en el modelo .pbip")

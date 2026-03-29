@@ -64,14 +64,14 @@ function Create-VisualJson {
     }
 
     $json = $visualObj | ConvertTo-Json -Depth 10
-    
+
     $targetFolder = Join-Path $visualsDir $VisualName
     New-Item -ItemType Directory -Path $targetFolder | Out-Null
-    
+
     $targetFile = Join-Path $targetFolder "visual.json"
     $utf8NoBom = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllText($targetFile, $json, $utf8NoBom)
-    
+
     Write-Host "Created visual '$TitleText' of type '$VisualType' at $targetFile"
 }
 
